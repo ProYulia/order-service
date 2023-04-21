@@ -16,6 +16,7 @@ public class Order {
 
     @Column(name = "order_weight")
     private float weight;
+
     @OneToOne
     private Region region;
 

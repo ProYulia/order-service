@@ -1,9 +1,6 @@
 package ru.yandex.yandexlavka.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalTime;
 
@@ -11,9 +8,13 @@ import java.time.LocalTime;
 public class Shift {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "shift_id")
     private int id;
 
+    @Column(name = "time_start")
     private LocalTime startTime;
+
+    @Column(name = "time_end")
     private LocalTime endTime;
 
     public int getId() {

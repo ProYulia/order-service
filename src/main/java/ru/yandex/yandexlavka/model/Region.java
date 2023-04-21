@@ -7,8 +7,10 @@ import jakarta.persistence.*;
 public class Region {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "region_id")
     private int id;
 
+    @Column(name = "region_number")
     private int regionNumber;
 
     @ManyToOne
