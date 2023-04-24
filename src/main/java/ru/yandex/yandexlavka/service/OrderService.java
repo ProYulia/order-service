@@ -1,10 +1,14 @@
 package ru.yandex.yandexlavka.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.stereotype.Service;
-import ru.yandex.yandexlavka.dto.OrderDTO;
-import ru.yandex.yandexlavka.model.Order;
+import ru.yandex.yandexlavka.mapper.OrderMapper;
+import ru.yandex.yandexlavka.model.dto.CreateOrderDto;
+import ru.yandex.yandexlavka.model.entity.OrderEntity;
+import ru.yandex.yandexlavka.model.entity.RegionEntity;
 import ru.yandex.yandexlavka.repository.OrderRepository;
+import ru.yandex.yandexlavka.repository.RegionRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,30 +18,34 @@ import java.util.stream.Collectors;
 public class OrderService {
 
 
+    @Autowired
     private OrderRepository orderRepository;
-    private OrderDTOMapper orderDTOMapper;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, OrderDTOMapper orderDTOMapper) {
-        this.orderRepository = orderRepository;
-        this.orderDTOMapper = orderDTOMapper;
-    }
+    private OrderMapper orderMapper;
 
-    public List<OrderDTO> getAllOrders() {
+    @Autowired
+    private RegionRepository regionRepository;
+
+
+    public List<CreateOrderDto> getAllOrders() {
         return orderRepository.findAll()
-                .stream().map(orderDTOMapper)
+                .stream().map(orderEntity -> orderMapper.orderToOrderDto(orderEntity))
                 .collect(Collectors.toList());
     }
 
-    public OrderDTO getOrderById(int orderID) {
-        return orderRepository.findById(orderID)
-                .map(orderDTOMapper)
-                .orElse(null);
-
+    public CreateOrderDto getOrderById(int orderID) {
+        OrderEntity orderEntity = orderRepository.findById(orderID).orElseThrow();
+         return orderMapper.orderToOrderDto(orderEntity);
     }
 
-    public void save() { //todo
+    public void saveOrder(CreateOrderDto createOrderDto) {
 
+        RegionEntity regionEntity = regionRepository.findRegionEntityByRegionNumber(createOrderDto
+                .getRegion())
+                .orElseThrow();
+        OrderEntity orderResult = orderMapper.orderDtotoOrderEntity(createOrderDto, regionEntity);
+        orderRepository.save(orderResult);
     }
 
 }

@@ -2,7 +2,8 @@ package ru.yandex.yandexlavka.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.yandexlavka.model.Courier;
+import ru.yandex.yandexlavka.model.dto.CreateCourierDto;
+import ru.yandex.yandexlavka.model.entity.CourierEntity;
 import ru.yandex.yandexlavka.service.CourierService;
 
 import java.util.List;
@@ -11,28 +12,22 @@ import java.util.List;
 @RequestMapping("/couriers")
 public class CourierController {
 
-
+    @Autowired
     private CourierService courierService;
 
-    @Autowired
-    public CourierController(CourierService courierService) {
-        this.courierService = courierService;
-    }
-
     @GetMapping()
-    public List<Courier> getAllCouriers() { //offset + limit
+    public List<CourierEntity> getAllCouriers() { //offset + limit
         return courierService.getAllCouriers();
     }
 
     @GetMapping("/{courierID}")
-    public Courier getCourierByID(@PathVariable int courierID) {
+    public CreateCourierDto getCourierByID(@PathVariable int courierID) {
         return courierService.getCourierByID(courierID);
     }
 
     @PostMapping()
-    public String addCouriers(@RequestBody Courier.CourierType courierType,  //TODO
-                               List<Integer> regions, List<String> workingHours) {
-        return "";
+    public CourierEntity addCouriers(@RequestBody CreateCourierDto createCourierDto) {
+        return courierService.saveCourier(createCourierDto);
     }
 
 //    @GetMapping("/assignments") // optional

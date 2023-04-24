@@ -21,8 +21,8 @@ services:
   db:
     container_name: yandex-lavka-db
     image: postgres:15.2
-#    volumes:
-#      - dbvolume:/var/lib/postgresql/dbvolume
+    volumes:
+      - dbvolume:/var/lib/postgresql/dbvolume
     ports:
       - "5431:5432"
     environment:

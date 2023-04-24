@@ -1,32 +1,41 @@
 package ru.yandex.yandexlavka.service;
 
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.yandexlavka.model.Courier;
+import ru.yandex.yandexlavka.mapper.CourierMapper;
+import ru.yandex.yandexlavka.model.dto.CreateCourierDto;
+import ru.yandex.yandexlavka.model.entity.CourierEntity;
 import ru.yandex.yandexlavka.repository.CourierRepository;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
-//добавить конструктор
-@Transactional //todo
 @Service
 public class CourierService {
 
+
+    @Autowired
+    private CourierMapper courierMapper;
+
+    @Autowired
     private CourierRepository courierRepository;
 
-    @Autowired// необязательно?
-    public CourierService(CourierRepository courierRepository) {
-        this.courierRepository = courierRepository;
+
+    public List<CreateCourierDto> getAllCouriers() {
+        return courierRepository
+                .findAll()
+                .stream()
+                .map(courierEntity -> courierMapper.courierToDto(courierEntity))
+                .collect(Collectors.toList());
     }
 
-    public List<Courier> getAllCouriers() {
-        return courierRepository.findAll();
+    public CreateCourierDto getCourierByID(int courierID) {
+        CourierEntity courierEntity = courierRepository.findById(courierID).orElseThrow();
+        return courierMapper.courierToDto(courierEntity);
     }
 
-    public Courier getCourierByID(int courierID) {
-        Optional<Courier> courier = courierRepository.findById(courierID);
-        return courier.orElse(null);
+    public void saveCourier(CreateCourierDto createCourierDto) {
+        CourierEntity courierResult = courierMapper.courierDtoToEntity(createCourierDto);
+        courierRepository.save(courierResult);
     }
 }
