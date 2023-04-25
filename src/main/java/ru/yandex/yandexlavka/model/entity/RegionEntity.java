@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "region")
 @Getter
@@ -18,8 +20,7 @@ public class RegionEntity {
     @Column(name = "region_number")
     private int regionNumber;
 
-    @ManyToOne
-    @JoinColumn(name = "courier_id", referencedColumnName = "courier_id")
-    private CourierEntity courierEntity;
+    @ManyToMany(mappedBy = "regionEntities")
+    private List<CourierEntity> courierEntities;
 
 }

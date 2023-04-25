@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -25,21 +26,21 @@ public class OrderEntity {
     @OneToOne
     private RegionEntity regionEntity;
 
-    @OneToMany
-    private List<ShiftEntity> deliveryHours;
+    @OneToMany(mappedBy = "order")
+    private List<DeliveryHoursEntity> deliveryHours;
 
     @Column(name = "order_cost")
     private int cost;
 
     @Column(name = "complete_time")
-    private String completeTime; //todo change to localTime
+    private LocalTime completeTime;
 
     public OrderEntity() {
     }
 
     public OrderEntity(float weight,
                        RegionEntity regionEntity,
-                       List<ShiftEntity> deliveryHours,
+                       List<DeliveryHoursEntity> deliveryHours,
                        int cost) {
         this.weight = weight;
         this.regionEntity = regionEntity;

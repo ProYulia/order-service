@@ -2,8 +2,6 @@ package ru.yandex.yandexlavka.model.dto;
 
 import lombok.*;
 import ru.yandex.yandexlavka.model.entity.CourierEntity;
-import ru.yandex.yandexlavka.model.entity.RegionEntity;
-import ru.yandex.yandexlavka.model.entity.ShiftEntity;
 
 import java.util.List;
 
@@ -14,10 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CreateCourierDto {
 
-    private CourierEntity.CourierType courierType;
-//    private List<RegionEntity> regionEntities;
-//    private List<ShiftEntity> shiftEntities;
-
+    private CourierEntity.CourierType courierType; // enum vs String
     private List<Integer> regions;
     private List<String> workingHours;
 

@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 @Entity
 @Table(name = "courier")
@@ -24,40 +21,38 @@ public class CourierEntity {
     @Column(name = "courier_type")
     private CourierType courierType;
 
-    @OneToMany(mappedBy = "courierEntity")
+
+    @ManyToMany
+    @JoinTable(name = "courier_region",
+            joinColumns = @JoinColumn(name = "courier_id"),
+            inverseJoinColumns = @JoinColumn(name = "region_id")
+    )
     private List<RegionEntity> regionEntities;
 
-    @OneToMany
-    private List<ShiftEntity> shiftEntities;
+
+    @OneToMany(mappedBy = "courierId")
+    private List<WorkingHoursEntity> workingHours;
 
     public CourierEntity() {}
 
-    public List<String> shiftEntitiesToList() {
-        List<String> result = new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-
-        for(ShiftEntity entity : shiftEntities) {
-            String shift = entity.getStartTime().format(formatter) +
-                    "-" +
-                    entity.getStartTime().format(formatter);
-
-            result.add(shift);
-        }
-        return result;
-    }
-
-
-
     public CourierEntity(CourierType courierType,
                          List<RegionEntity> regionEntities,
-                         List<ShiftEntity> shiftEntities) {
+                         List<WorkingHoursEntity> workingHours) {
         this.courierType = courierType;
         this.regionEntities = regionEntities;
-        this.shiftEntities = shiftEntities;
+        this.workingHours = workingHours;
     }
 
     public enum CourierType {
-        FOOT, BIKE, AUTO
+        FOOT("FOOT"),
+
+        BIKE("BIKE"),
+
+        AUTO("AUTO");
+
+        private String value;
+
+        CourierType(String value) {this.value = value;}
     }
 
 }

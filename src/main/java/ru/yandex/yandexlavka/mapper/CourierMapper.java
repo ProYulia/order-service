@@ -4,26 +4,31 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.yandex.yandexlavka.model.dto.CreateCourierDto;
 import ru.yandex.yandexlavka.model.entity.CourierEntity;
+import ru.yandex.yandexlavka.model.entity.RegionEntity;
+import ru.yandex.yandexlavka.model.entity.WorkingHoursEntity;
 
-@Mapper(componentModel = "spring")
+import java.util.List;
+
+@Mapper
 public interface CourierMapper {
 
     @Mapping(
             target = "regions",
             expression =
-             "java(courierEntity.getRegionEntities().stream().map(RegionEntity::getRegionNumber).collect(java.util.stream.Collectors.toList())"
+             "java(courierEntity.getRegionEntities().stream().map(RegionEntity::getRegionNumber).toList();)"
     )
     @Mapping(target = "workingHours",
     expression =
-            "java(courierEntity.shiftEntitiesToList())"
+            "java(courierEntity.getWorkingHours().stream().map(el -> el.toString()).toList();)"
     )
     CreateCourierDto courierToDto(CourierEntity courierEntity);
 
 
     @Mapping(target = "courierID", ignore = true)
     @Mapping(source = "regions", target = "regionEntities")
-    @Mapping(source = "workingHours", target = "shiftEntities")
-    CourierEntity courierDtoToEntity(CreateCourierDto createCourierDto);
-
+    @Mapping(source = "workingHoursEntities", target = "workingHours")
+    CourierEntity courierDtoToEntity(CreateCourierDto createCourierDto,
+                                     List<RegionEntity> regions,
+                                     List<WorkingHoursEntity> workingHoursEntities);
 
 }

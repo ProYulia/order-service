@@ -16,7 +16,7 @@ public class CourierController {
     private CourierService courierService;
 
     @GetMapping()
-    public List<CourierEntity> getAllCouriers() { //offset + limit
+    public List<CreateCourierDto> getAllCouriers() { //offset + limit
         return courierService.getAllCouriers();
     }
 
@@ -26,16 +26,9 @@ public class CourierController {
     }
 
     @PostMapping()
-    public CourierEntity addCouriers(@RequestBody CreateCourierDto createCourierDto) {
-        return courierService.saveCourier(createCourierDto);
+    public List<CourierEntity> addCouriers(@RequestBody CreateCourierDto[] createCourierDto) { //should I return the result here?
+        return courierService.saveCouriers(createCourierDto);
     }
 
-//    @GetMapping("/assignments") // optional
-//    public String getCouriersAssignments() {return "";}
-//
-//    @GetMapping("/meta-info/{courierID}") //optional
-//    public String getCourierMetaInfo(@PathVariable int courierID, @RequestBody String startDate, String endDate) {
-//        return "";
-//    }
 
 }

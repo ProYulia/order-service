@@ -2,6 +2,7 @@ package ru.yandex.yandexlavka.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.yandexlavka.model.dto.CompletedOrderDto;
 import ru.yandex.yandexlavka.model.dto.CreateOrderDto;
 import ru.yandex.yandexlavka.model.entity.OrderEntity;
 import ru.yandex.yandexlavka.service.OrderService;
@@ -30,16 +31,17 @@ public class OrderController {
         return orderService.getOrderById(orderID);
     }
 
-//    @PostMapping() todo add createOrderRequest
-//    public OrderEntity addOrders(@RequestBody CreateOrderDto createOrderDto) {
-//        return orderService.saveOrder(createOrderDto);
-//    }
-    @PatchMapping("/complete") //TODO
-    public String postCompletedOrders(@RequestBody int courierID, int orderID, String completeTime) {
-        return "";
+    @PostMapping() //should I return the result here?
+    public List<OrderEntity> addOrders(@RequestBody CreateOrderDto[] orders) {
+        return orderService.saveAllOrders(orders);
     }
 
-//    public String postAssignOrder() {return "";} optional
+    @PatchMapping("/complete") //TODO Обработчик должен быть идемпотентным
+    public List<OrderEntity> postCompletedOrders(@RequestBody CompletedOrderDto[] completedOrders) {
+        return orderService.completeOrders(completedOrders);
+    }
+
+
 
 
 
