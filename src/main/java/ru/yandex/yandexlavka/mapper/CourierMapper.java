@@ -9,7 +9,7 @@ import ru.yandex.yandexlavka.model.entity.WorkingHoursEntity;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CourierMapper {
 
     @Mapping(

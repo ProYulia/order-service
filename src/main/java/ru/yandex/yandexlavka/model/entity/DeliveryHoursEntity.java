@@ -27,7 +27,6 @@ public class DeliveryHoursEntity {
 
     @ManyToOne
     @JoinColumn(name = "deliveryHours")
-    @Column(name = "order_id")
     private OrderEntity order;
 
     @Override

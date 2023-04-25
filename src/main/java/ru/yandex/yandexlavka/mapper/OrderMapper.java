@@ -25,6 +25,7 @@ public interface OrderMapper {
     @Mapping(source = "region", target = "regionEntity")
     @Mapping(target = "orderId", ignore = true)
     @Mapping(target = "deliveryHours", ignore = true)
+    @Mapping(target = "completeTime", ignore = true)
     OrderEntity orderDtotoOrderEntity(CreateOrderDto createOrderDto, RegionEntity region);
 
 

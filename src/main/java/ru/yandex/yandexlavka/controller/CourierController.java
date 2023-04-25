@@ -26,7 +26,7 @@ public class CourierController {
     }
 
     @PostMapping()
-    public List<CourierEntity> addCouriers(@RequestBody CreateCourierDto[] createCourierDto) { //should I return the result here?
+    public List<CourierEntity> addCouriers(@RequestBody List<CreateCourierDto> createCourierDto) { //should I return the result here?
         return courierService.saveCouriers(createCourierDto);
     }
 

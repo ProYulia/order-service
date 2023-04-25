@@ -22,7 +22,7 @@ public class CourierEntity {
     private CourierType courierType;
 
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "courier_region",
             joinColumns = @JoinColumn(name = "courier_id"),
             inverseJoinColumns = @JoinColumn(name = "region_id")
@@ -30,7 +30,7 @@ public class CourierEntity {
     private List<RegionEntity> regionEntities;
 
 
-    @OneToMany(mappedBy = "courierId")
+    @OneToMany(mappedBy = "courier", cascade = CascadeType.ALL)
     private List<WorkingHoursEntity> workingHours;
 
     public CourierEntity() {}

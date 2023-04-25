@@ -5,15 +5,11 @@ import org.springframework.stereotype.Service;
 import ru.yandex.yandexlavka.mapper.OrderMapper;
 import ru.yandex.yandexlavka.model.dto.CompletedOrderDto;
 import ru.yandex.yandexlavka.model.dto.CreateOrderDto;
-import ru.yandex.yandexlavka.model.entity.CourierEntity;
-import ru.yandex.yandexlavka.model.entity.DeliveryHoursEntity;
 import ru.yandex.yandexlavka.model.entity.OrderEntity;
 import ru.yandex.yandexlavka.model.entity.RegionEntity;
 import ru.yandex.yandexlavka.repository.OrderRepository;
 import ru.yandex.yandexlavka.repository.RegionRepository;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,10 +56,6 @@ public class OrderService {
 
     public List<OrderEntity> completeOrders(CompletedOrderDto[] completedOrders) { //todo
         return new ArrayList<>();
-    }
-
-    public void test(String workingHours) { //remove
-        LocalTime result = LocalTime.parse(workingHours.substring(1, 6), DateTimeFormatter.ofPattern("HH:mm"));
     }
 
 

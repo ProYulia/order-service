@@ -43,17 +43,21 @@ public class CourierService {
         return courierMapper.courierToDto(courierEntity);
     }
 
-    public List<CourierEntity> saveCouriers(CreateCourierDto[] createCourierDto) {
+    public List<CourierEntity> saveCouriers(List<CreateCourierDto> createCourierDto) {
         List<CourierEntity> courierEntityList = new ArrayList<>();
         for (CreateCourierDto courierDto : createCourierDto) {
+
             List<RegionEntity> regionEntityList = courierDto.getRegions().stream()
                     .map(regionNumber -> regionMapper.regionNumberToRegionEntity(regionNumber))
                     .toList();
+
             List<WorkingHoursEntity> workingHoursEntityList = courierDto.getWorkingHours().stream()
-                    .map(shift -> workingHoursMapper.stringToWorkingHoursEntity(shift))
+                    .map(shift -> workingHoursMapper.stringToWorkingHoursEntity(shift.substring(0,5), shift.substring(6,11)))
                     .toList();
+
             CourierEntity courierEntity = courierMapper.courierDtoToEntity(courierDto, regionEntityList,
                     workingHoursEntityList);
+
             courierEntityList.add(courierEntity);
         }
         courierRepository.saveAll(courierEntityList);

@@ -4,12 +4,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.yandex.yandexlavka.model.entity.WorkingHoursEntity;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface WorkingHoursMapper {
 
-    @Mapping(expression = "java(LocalTime.parse(workingHours.substring(1, 6)))", target = "startTime")
-    @Mapping(expression = "java(LocalTime.parse(workingHours.substring(6, 11)))", target = "endTime")
+    @Mapping(target = "startTime", dateFormat = "HH:mm")
+    @Mapping(target = "endTime", dateFormat = "HH:mm")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "courier", ignore = true)
-    WorkingHoursEntity stringToWorkingHoursEntity(String workingHours);
+    WorkingHoursEntity stringToWorkingHoursEntity(String startTime, String endTime);
 }

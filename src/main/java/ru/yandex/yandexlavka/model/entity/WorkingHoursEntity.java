@@ -26,7 +26,6 @@ public class WorkingHoursEntity {
 
     @ManyToOne
     @JoinColumn(name = "workingHours")
-    @Column(name = "courier_id")
     private CourierEntity courier;
 
     @Override
