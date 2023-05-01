@@ -40,27 +40,32 @@ public class CourierService {
     private GetCouriersResponse getCouriersResponse;
 
 
-    public List<CreateCourierDto> getAllCouriers(Integer offset, Integer limit) {
+    public GetCouriersResponse getAllCouriers(Integer offset, Integer limit) {
 
 //        int pageNumber = offset/limit;
 //        Pageable pageable = PageRequest.of(pageNumber, limit);
 
-        if(offset == null) {
+        if (offset == null) {
             getCouriersResponse.setOffset(0);
             offset = 0;
-        }
-        if(limit == null) {
+        } else
+            getCouriersResponse.setOffset(offset);
+
+        if (limit == null) {
             getCouriersResponse.setLimit(1);
             limit = 1;
-        }
+        } else
+            getCouriersResponse.setLimit(limit);
 
-        List<CreateCourierDto> createCourierDtoList = courierRepository.findAll(offset, limit).stream()
-                .map(courierEntity -> courierMapper.courierToDto(courierEntity))
+        List<CourierDto> courierDtoList = courierRepository
+                .findAll(offset, limit)
+                .stream()
+                .map(entity -> courierMapper.entityToCreateResponse(entity))
                 .toList();
 
-        getCouriersResponse.setCourierDtoList(createCourierDtoList);
+        getCouriersResponse.setCouriers(courierDtoList);
 
-        return createCourierDtoList;
+        return getCouriersResponse;
     }
 
     public CreateCourierDto getCourierByID(int courierID) {
@@ -68,7 +73,7 @@ public class CourierService {
         return courierMapper.courierToDto(courierEntity);
     }
 
-    public List<CourierEntity> saveCouriers(List<CreateCourierDto> createCourierDto) {
+    public CreateCourierResponse saveCouriers(List<CreateCourierDto> createCourierDto) {
 
         List<CourierEntity> courierEntityList = new ArrayList<>();
 
@@ -96,8 +101,7 @@ public class CourierService {
                 .toList();
         createCourierResponse.setCouriers(courierDtoList);
 
-
-        return courierEntityList;
+        return createCourierResponse;
     }
 
 

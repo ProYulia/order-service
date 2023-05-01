@@ -17,20 +17,12 @@ public class CourierController {
     @Autowired
     private CourierService courierService;
 
-    @Autowired
-    private GetCouriersResponse getCouriersResponse;
-
-    @Autowired
-    private CreateCourierResponse createCourierResponse;
 
     @GetMapping
     public GetCouriersResponse getAllCouriers(@RequestParam(name = "offset", required = false) Integer offset,
                                               @RequestParam(name = "limit", required = false) Integer limit) {
 
-//        getCouriersResponse.setCreateCourierDtoList();
-        courierService.getAllCouriers(offset, limit);
-
-        return getCouriersResponse;
+        return courierService.getAllCouriers(offset, limit);
     }
 
     @GetMapping("/{courierID}")
@@ -42,9 +34,7 @@ public class CourierController {
     public CreateCourierResponse addCouriers(@RequestBody CreateCourierRequest createCourier) {
 
         List<CreateCourierDto> courierDtoList = createCourier.getCreateCourierDtoList();
-        courierService.saveCouriers(courierDtoList);
-
-        return createCourierResponse;
+        return courierService.saveCouriers(courierDtoList);
     }
 
 

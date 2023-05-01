@@ -7,8 +7,6 @@ import ru.yandex.yandexlavka.model.dto.CreateCourierDto;
 import ru.yandex.yandexlavka.model.entity.CourierEntity;
 import ru.yandex.yandexlavka.model.entity.RegionEntity;
 import ru.yandex.yandexlavka.model.entity.WorkingHoursEntity;
-import ru.yandex.yandexlavka.model.request.CreateCourierRequest;
-import ru.yandex.yandexlavka.model.response.CreateCourierResponse;
 
 import java.util.List;
 
