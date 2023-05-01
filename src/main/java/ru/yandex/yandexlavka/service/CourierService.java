@@ -45,17 +45,14 @@ public class CourierService {
 //        int pageNumber = offset/limit;
 //        Pageable pageable = PageRequest.of(pageNumber, limit);
 
-        if (offset == null) {
-            getCouriersResponse.setOffset(0);
-            offset = 0;
-        } else
-            getCouriersResponse.setOffset(offset);
+        if (offset == null) offset = 0;
+        else if (offset < 0) throw new IllegalArgumentException();
 
-        if (limit == null) {
-            getCouriersResponse.setLimit(1);
-            limit = 1;
-        } else
-            getCouriersResponse.setLimit(limit);
+        if (limit == null) limit = 1;
+        else if (limit < 0) throw new IllegalArgumentException();
+
+        getCouriersResponse.setOffset(offset);
+        getCouriersResponse.setLimit(limit);
 
         List<CourierDto> courierDtoList = courierRepository
                 .findAll(offset, limit)
@@ -68,9 +65,9 @@ public class CourierService {
         return getCouriersResponse;
     }
 
-    public CreateCourierDto getCourierByID(int courierID) {
+    public CourierDto getCourierByID(int courierID) {
         CourierEntity courierEntity = courierRepository.findById(courierID).orElseThrow();
-        return courierMapper.courierToDto(courierEntity);
+        return courierMapper.entityToCreateResponse(courierEntity);
     }
 
     public CreateCourierResponse saveCouriers(List<CreateCourierDto> createCourierDto) {
@@ -79,15 +76,20 @@ public class CourierService {
 
         for (CreateCourierDto courierDto : createCourierDto) {
 
-            List<RegionEntity> regionEntityList = courierDto.getRegions().stream()
+            List<RegionEntity> regionEntityList = courierDto
+                    .getRegions()
+                    .stream()
                     .map(regionNumber -> regionMapper.regionNumberToRegionEntity(regionNumber))
                     .toList();
 
-            List<WorkingHoursEntity> workingHoursEntityList = courierDto.getWorkingHours().stream()
+            List<WorkingHoursEntity> workingHoursEntityList = courierDto
+                    .getWorkingHours()
+                    .stream()
                     .map(shift -> workingHoursMapper.stringToWorkingHoursEntity(shift.substring(0,5), shift.substring(6,11)))
                     .toList();
 
-            CourierEntity courierEntity = courierMapper.courierDtoToEntity(courierDto, regionEntityList,
+            CourierEntity courierEntity = courierMapper
+                    .courierDtoToEntity(courierDto, regionEntityList,
                     workingHoursEntityList);
 
             courierEntityList.add(courierEntity);

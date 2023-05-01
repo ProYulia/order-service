@@ -2,6 +2,7 @@ package ru.yandex.yandexlavka.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.yandexlavka.model.dto.CourierDto;
 import ru.yandex.yandexlavka.model.dto.CreateCourierDto;
 import ru.yandex.yandexlavka.model.request.CreateCourierRequest;
 import ru.yandex.yandexlavka.model.response.CreateCourierResponse;
@@ -26,7 +27,7 @@ public class CourierController {
     }
 
     @GetMapping("/{courierID}")
-    public CreateCourierDto getCourierByID(@PathVariable int courierID) {
+    public CourierDto getCourierByID(@PathVariable int courierID) {
         return courierService.getCourierByID(courierID);
     }
 
