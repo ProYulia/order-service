@@ -3,13 +3,9 @@ package ru.yandex.yandexlavka.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.yandexlavka.mapper.CourierMapper;
-import ru.yandex.yandexlavka.mapper.RegionMapper;
-import ru.yandex.yandexlavka.mapper.WorkingHoursMapper;
 import ru.yandex.yandexlavka.model.dto.CourierDto;
 import ru.yandex.yandexlavka.model.dto.CreateCourierDto;
 import ru.yandex.yandexlavka.model.entity.CourierEntity;
-import ru.yandex.yandexlavka.model.entity.RegionEntity;
-import ru.yandex.yandexlavka.model.entity.WorkingHoursEntity;
 import ru.yandex.yandexlavka.model.response.CreateCourierResponse;
 import ru.yandex.yandexlavka.model.response.GetCouriersResponse;
 import ru.yandex.yandexlavka.repository.CourierRepository;
@@ -26,12 +22,6 @@ public class CourierService {
 
     @Autowired
     private CourierMapper courierMapper;
-
-    @Autowired
-    private RegionMapper regionMapper;
-
-    @Autowired
-    private WorkingHoursMapper workingHoursMapper;
 
     @Autowired
     private CreateCourierResponse createCourierResponse;
@@ -75,27 +65,11 @@ public class CourierService {
         List<CourierEntity> courierEntityList = new ArrayList<>();
 
         for (CreateCourierDto courierDto : createCourierDto) {
-
-            List<RegionEntity> regionEntityList = courierDto
-                    .getRegions()
-                    .stream()
-                    .map(regionNumber -> regionMapper.regionNumberToRegionEntity(regionNumber))
-                    .toList();
-
-            List<WorkingHoursEntity> workingHoursEntityList = courierDto
-                    .getWorkingHours()
-                    .stream()
-                    .map(shift -> workingHoursMapper.stringToWorkingHoursEntity(shift.substring(0,5), shift.substring(6,11)))
-                    .toList();
-
-            CourierEntity courierEntity = courierMapper
-                    .courierDtoToEntity(courierDto, regionEntityList,
-                    workingHoursEntityList);
-
+            CourierEntity courierEntity = courierMapper.courierDtoToEntity(courierDto);
             courierEntityList.add(courierEntity);
         }
-        courierRepository.saveAll(courierEntityList);
 
+        courierRepository.saveAll(courierEntityList);
 
         List<CourierDto> courierDtoList = courierEntityList
                 .stream()
@@ -105,8 +79,6 @@ public class CourierService {
 
         return createCourierResponse;
     }
-
-
 
 
 }

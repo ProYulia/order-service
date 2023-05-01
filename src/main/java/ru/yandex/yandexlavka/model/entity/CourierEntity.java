@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+
 @Entity
 @Table(name = "courier")
 @Getter
@@ -12,8 +13,8 @@ import java.util.List;
 public class CourierEntity {
 
     @Id
-    @SequenceGenerator(name="courierSequence", sequenceName="courier_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="courierSequence")
+    @SequenceGenerator(name = "courierSequence", sequenceName = "courier_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "courierSequence")
     @Column(name = "courier_id")
     private int courierID;
 
@@ -22,24 +23,26 @@ public class CourierEntity {
     private CourierType courierType;
 
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "courier_region",
-            joinColumns = @JoinColumn(name = "courier_id"),
-            inverseJoinColumns = @JoinColumn(name = "region_id")
-    )
-    private List<RegionEntity> regionEntities;
+    @ElementCollection
+    @CollectionTable(name = "regions", joinColumns = @JoinColumn(name = "courier_id"))
+    @Column(name = "regions")
+    private List<Integer> regions;
 
 
-    @OneToMany(mappedBy = "courier", cascade = CascadeType.ALL)
-    private List<WorkingHoursEntity> workingHours;
+    @ElementCollection
+    @CollectionTable(name = "working_hours", joinColumns = @JoinColumn(name = "courier_id"))
+    @Column(name = "working_hours")
+    private List<String> workingHours;
 
-    public CourierEntity() {}
+
+    public CourierEntity() {
+    }
 
     public CourierEntity(CourierType courierType,
-                         List<RegionEntity> regionEntities,
-                         List<WorkingHoursEntity> workingHours) {
+                         List<Integer> regions,
+                         List<String> workingHours) {
         this.courierType = courierType;
-        this.regionEntities = regionEntities;
+        this.regions = regions;
         this.workingHours = workingHours;
     }
 
@@ -52,7 +55,9 @@ public class CourierEntity {
 
         private String value;
 
-        CourierType(String value) {this.value = value;}
+        CourierType(String value) {
+            this.value = value;
+        }
     }
 
 }
