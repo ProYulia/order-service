@@ -3,7 +3,9 @@ package ru.yandex.yandexlavka.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.yandexlavka.model.dto.CreateCourierDto;
-import ru.yandex.yandexlavka.model.entity.CourierEntity;
+import ru.yandex.yandexlavka.model.request.CreateCourierRequest;
+import ru.yandex.yandexlavka.model.response.CreateCourierResponse;
+import ru.yandex.yandexlavka.model.response.GetCouriersResponse;
 import ru.yandex.yandexlavka.service.CourierService;
 
 import java.util.List;
@@ -15,9 +17,20 @@ public class CourierController {
     @Autowired
     private CourierService courierService;
 
-    @GetMapping()
-    public List<CreateCourierDto> getAllCouriers() { //offset + limit
-        return courierService.getAllCouriers();
+    @Autowired
+    private GetCouriersResponse getCouriersResponse;
+
+    @Autowired
+    private CreateCourierResponse createCourierResponse;
+
+    @GetMapping
+    public GetCouriersResponse getAllCouriers(@RequestParam(name = "offset", required = false) Integer offset,
+                                              @RequestParam(name = "limit", required = false) Integer limit) {
+
+//        getCouriersResponse.setCreateCourierDtoList();
+        courierService.getAllCouriers(offset, limit);
+
+        return getCouriersResponse;
     }
 
     @GetMapping("/{courierID}")
@@ -26,8 +39,12 @@ public class CourierController {
     }
 
     @PostMapping()
-    public List<CourierEntity> addCouriers(@RequestBody List<CreateCourierDto> createCourierDto) { //should I return the result here?
-        return courierService.saveCouriers(createCourierDto);
+    public CreateCourierResponse addCouriers(@RequestBody CreateCourierRequest createCourier) {
+
+        List<CreateCourierDto> courierDtoList = createCourier.getCreateCourierDtoList();
+        courierService.saveCouriers(courierDtoList);
+
+        return createCourierResponse;
     }
 
 

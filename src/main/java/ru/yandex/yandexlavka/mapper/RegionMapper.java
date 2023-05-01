@@ -9,6 +9,6 @@ public interface RegionMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "regionNumber", source = "regionNumber")
-    @Mapping(target = "completeTime", ignore = true)
+    @Mapping(target = "courierEntities", ignore = true)
     RegionEntity regionNumberToRegionEntity(Integer regionNumber);
 }

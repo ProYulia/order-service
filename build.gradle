@@ -2,6 +2,8 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.4'
     id 'io.spring.dependency-management' version '1.1.0'
+    id "org.openapi.generator" version "6.3.0"
+
 }
 
 group = 'ru.yandex'
@@ -33,6 +35,19 @@ dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.4.Final'
 }
 
+
+
 tasks.named('test') {
     useJUnitPlatform()
+
+}
+
+openApiGenerate {
+    inputSpec = 'src/main/resources/openapi.json'
+    outputDir = 'build/swagger'
+    generatorName = 'spring'
+    library = 'spring-boot'
+    apiPackage = 'org.openapi.example.api'
+    invokerPackage = 'org.openapi.example.invoker'
+    modelPackage = 'org.openapi.example.model'
 }

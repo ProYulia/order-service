@@ -2,10 +2,13 @@ package ru.yandex.yandexlavka.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import ru.yandex.yandexlavka.model.dto.CourierDto;
 import ru.yandex.yandexlavka.model.dto.CreateCourierDto;
 import ru.yandex.yandexlavka.model.entity.CourierEntity;
 import ru.yandex.yandexlavka.model.entity.RegionEntity;
 import ru.yandex.yandexlavka.model.entity.WorkingHoursEntity;
+import ru.yandex.yandexlavka.model.request.CreateCourierRequest;
+import ru.yandex.yandexlavka.model.response.CreateCourierResponse;
 
 import java.util.List;
 
@@ -14,12 +17,10 @@ public interface CourierMapper {
 
     @Mapping(
             target = "regions",
-            expression =
-             "java(courierEntity.getRegionEntities().stream().map(RegionEntity::getRegionNumber).toList();)"
+            expression = "java(courierEntity.getRegionEntities().stream().map(RegionEntity::getRegionNumber).toList();)"
     )
     @Mapping(target = "workingHours",
-    expression =
-            "java(courierEntity.getWorkingHours().stream().map(el -> el.toString()).toList();)"
+    expression = "java(courierEntity.getWorkingHours().stream().map(el -> el.toString()).toList();)"
     )
     CreateCourierDto courierToDto(CourierEntity courierEntity);
 
@@ -30,5 +31,18 @@ public interface CourierMapper {
     CourierEntity courierDtoToEntity(CreateCourierDto createCourierDto,
                                      List<RegionEntity> regions,
                                      List<WorkingHoursEntity> workingHoursEntities);
+
+
+    @Mapping(target = "id", source = "courierID")
+    @Mapping(
+            target = "regions",
+            expression = "java(courierEntity.getRegionEntities().stream().map(RegionEntity::getRegionNumber).toList();)"
+    )
+    @Mapping(target = "workingHours",
+            expression = "java(courierEntity.getWorkingHours().stream().map(el -> el.toString()).toList();)"
+    )
+    CourierDto entityToCreateResponse(CourierEntity courierEntity);
+
+
 
 }

@@ -1,5 +1,6 @@
 package ru.yandex.yandexlavka.model.dto;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import ru.yandex.yandexlavka.model.entity.CourierEntity;
@@ -11,15 +12,17 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public class CreateCourierDto {
+public class CourierDto {
 
-    @JsonProperty(value = "courier_type", required = true)
-    private CourierEntity.CourierType courierType; // enum vs String
+    @JsonProperty(value = "courier_id")
+    private Integer id;
 
-    @JsonProperty(value = "regions", required = true)
+    @JsonProperty(value = "courier_type")
+    private CourierEntity.CourierType courierType;
+
+    @JsonProperty(value = "regions")
     private List<Integer> regions;
 
-    @JsonProperty(value = "working_hours", required = true)
+    @JsonProperty(value = "working_hours")
     private List<String> workingHours;
-
 }

@@ -12,4 +12,6 @@ public interface WorkingHoursMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "courier", ignore = true)
     WorkingHoursEntity stringToWorkingHoursEntity(String startTime, String endTime);
+
+
 }

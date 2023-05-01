@@ -5,15 +5,17 @@ import org.springframework.stereotype.Service;
 import ru.yandex.yandexlavka.mapper.CourierMapper;
 import ru.yandex.yandexlavka.mapper.RegionMapper;
 import ru.yandex.yandexlavka.mapper.WorkingHoursMapper;
+import ru.yandex.yandexlavka.model.dto.CourierDto;
 import ru.yandex.yandexlavka.model.dto.CreateCourierDto;
 import ru.yandex.yandexlavka.model.entity.CourierEntity;
 import ru.yandex.yandexlavka.model.entity.RegionEntity;
 import ru.yandex.yandexlavka.model.entity.WorkingHoursEntity;
+import ru.yandex.yandexlavka.model.response.CreateCourierResponse;
+import ru.yandex.yandexlavka.model.response.GetCouriersResponse;
 import ru.yandex.yandexlavka.repository.CourierRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CourierService {
@@ -31,11 +33,34 @@ public class CourierService {
     @Autowired
     private WorkingHoursMapper workingHoursMapper;
 
+    @Autowired
+    private CreateCourierResponse createCourierResponse;
 
-    public List<CreateCourierDto> getAllCouriers() {
-        return courierRepository.findAll().stream()
+    @Autowired
+    private GetCouriersResponse getCouriersResponse;
+
+
+    public List<CreateCourierDto> getAllCouriers(Integer offset, Integer limit) {
+
+//        int pageNumber = offset/limit;
+//        Pageable pageable = PageRequest.of(pageNumber, limit);
+
+        if(offset == null) {
+            getCouriersResponse.setOffset(0);
+            offset = 0;
+        }
+        if(limit == null) {
+            getCouriersResponse.setLimit(1);
+            limit = 1;
+        }
+
+        List<CreateCourierDto> createCourierDtoList = courierRepository.findAll(offset, limit).stream()
                 .map(courierEntity -> courierMapper.courierToDto(courierEntity))
-                .collect(Collectors.toList());
+                .toList();
+
+        getCouriersResponse.setCourierDtoList(createCourierDtoList);
+
+        return createCourierDtoList;
     }
 
     public CreateCourierDto getCourierByID(int courierID) {
@@ -44,7 +69,9 @@ public class CourierService {
     }
 
     public List<CourierEntity> saveCouriers(List<CreateCourierDto> createCourierDto) {
+
         List<CourierEntity> courierEntityList = new ArrayList<>();
+
         for (CreateCourierDto courierDto : createCourierDto) {
 
             List<RegionEntity> regionEntityList = courierDto.getRegions().stream()
@@ -61,7 +88,19 @@ public class CourierService {
             courierEntityList.add(courierEntity);
         }
         courierRepository.saveAll(courierEntityList);
-        return courierEntityList;
 
+
+        List<CourierDto> courierDtoList = courierEntityList
+                .stream()
+                .map(entity -> courierMapper.entityToCreateResponse(entity))
+                .toList();
+        createCourierResponse.setCouriers(courierDtoList);
+
+
+        return courierEntityList;
     }
+
+
+
+
 }

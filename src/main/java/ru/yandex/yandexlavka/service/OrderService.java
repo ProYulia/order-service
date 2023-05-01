@@ -41,7 +41,7 @@ public class OrderService {
     }
 
 
-    public List<OrderEntity> saveAllOrders(CreateOrderDto[] orders) { //should I return the result here?
+    public List<OrderEntity> saveAllOrders(List<CreateOrderDto> orders) { //should I return the result here?
         List<OrderEntity> orderEntityList = new ArrayList<>();
         for(CreateOrderDto orderDto : orders) {
             RegionEntity regionEntity = regionRepository.findRegionEntityByRegionNumber(
@@ -54,7 +54,7 @@ public class OrderService {
         return orderEntityList;
     }
 
-    public List<OrderEntity> completeOrders(CompletedOrderDto[] completedOrders) { //todo
+    public List<OrderEntity> completeOrders(List<CompletedOrderDto> completedOrders) { //todo
         return new ArrayList<>();
     }
 

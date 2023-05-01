@@ -26,7 +26,14 @@ public class CourierServiceTest {
 
     @Test
     public void shouldGetAllCouriers() {
-        List<CreateCourierDto> allCouriers = courierService.getAllCouriers();
+        //given
+        Integer offset = 0;
+        Integer limit = 0;
+
+        //when
+        List<CreateCourierDto> allCouriers = courierService.getAllCouriers(offset, limit);
+
+        //then
         Assertions.assertEquals(Collections.EMPTY_LIST, allCouriers);
     }
 
@@ -51,7 +58,7 @@ public class CourierServiceTest {
                 Arrays.asList("10:00-18:00")));
 
         //when
-        List<CourierEntity> courierEntities = courierService.saveCouriers(createCourierDto);
+        //List<CourierEntity> courierEntities = courierService.saveCouriers(createCourierDto);
         List<CourierEntity> all = courierRepository.findAll();
 
         //then
@@ -62,11 +69,11 @@ public class CourierServiceTest {
     @BeforeEach
     public void dropAll() {
        // courierRepository.deleteAll(); //where id > 100
-        List<CreateCourierDto> createCourierDto = Arrays.asList(new CreateCourierDto(CourierEntity.CourierType.FOOT,
+        List<CreateCourierDto> createCourierDto = List.of(new CreateCourierDto(CourierEntity.CourierType.FOOT,
                 Arrays.asList(0, 1),
-                Arrays.asList("10:00-18:00")));
+                List.of("10:00-18:00")));
 
-        courierRepository.save(new CourierEntity())
+        courierService.saveCouriers(createCourierDto);
     }
 
 

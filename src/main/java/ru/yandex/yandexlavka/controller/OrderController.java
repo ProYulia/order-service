@@ -32,12 +32,12 @@ public class OrderController {
     }
 
     @PostMapping() //should I return the result here?
-    public List<OrderEntity> addOrders(@RequestBody CreateOrderDto[] orders) {
+    public List<OrderEntity> addOrders(@RequestBody List<CreateOrderDto> orders) {
         return orderService.saveAllOrders(orders);
     }
 
     @PatchMapping("/complete") //TODO Обработчик должен быть идемпотентным
-    public List<OrderEntity> postCompletedOrders(@RequestBody CompletedOrderDto[] completedOrders) {
+    public List<OrderEntity> postCompletedOrders(@RequestBody List<CompletedOrderDto> completedOrders) {
         return orderService.completeOrders(completedOrders);
     }
 
