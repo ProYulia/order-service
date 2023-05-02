@@ -4,11 +4,6 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class BadRequestResponse {
+public record BadRequestResponse(HttpStatus status) {
 
-    private final HttpStatus status;
-
-    public BadRequestResponse(HttpStatus status) {
-        this.status = status;
-    }
 }
