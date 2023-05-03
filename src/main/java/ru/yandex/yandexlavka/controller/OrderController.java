@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.yandexlavka.model.dto.CreateOrderDto;
 import ru.yandex.yandexlavka.model.dto.OrderDto;
+import ru.yandex.yandexlavka.model.request.CompleteOrderRequest;
 import ru.yandex.yandexlavka.model.request.CreateOrderRequest;
 import ru.yandex.yandexlavka.service.OrderService;
 
@@ -35,9 +36,9 @@ public class OrderController {
         return orderService.saveAllOrders(createOrderDtoList);
     }
 
-//    @PatchMapping("/complete") //TODO Обработчик должен быть идемпотентным
-//    public List<OrderEntity> postCompletedOrders(@RequestBody List<CompletedOrderDto> completedOrders) {
-//        return orderService.completeOrders(completedOrders);
-//    }
+    @PatchMapping("/complete") //TODO Обработчик должен быть идемпотентным
+    public List<OrderDto> completeOrders(@RequestBody CompleteOrderRequest completedOrders) {
+        return orderService.completeOrders(completedOrders);
+    }
 
 }

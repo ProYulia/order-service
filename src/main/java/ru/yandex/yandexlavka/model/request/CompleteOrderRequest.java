@@ -5,17 +5,16 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
-import ru.yandex.yandexlavka.model.dto.CreateCourierDto;
+import ru.yandex.yandexlavka.model.dto.CompletedOrderDto;
 
 import java.util.List;
 
-
+@Component
 @Getter
 @Setter
 @ToString
-public class CreateCourierRequest {
+public class CompleteOrderRequest {
 
-    @JsonProperty("couriers")
-    List<CreateCourierDto> createCourierDtoList;
-
+    @JsonProperty(value = "complete_info")
+    List<CompletedOrderDto> completedOrderDtoList;
 }

@@ -3,6 +3,7 @@ package ru.yandex.yandexlavka.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
@@ -12,6 +13,7 @@ import java.util.List;
 @Table(name = "orders")
 @Getter
 @Setter
+@NoArgsConstructor
 public class OrderEntity {
 
     @Id
@@ -35,11 +37,9 @@ public class OrderEntity {
     private Integer cost;
 
     @Column(name = "complete_time")
-    //private LocalTime completeTime;
     private Instant completeTime;
 
-    public OrderEntity() {
-    }
-
+    @Column(name = "courier_id")
+    private Integer courier;
 
 }

@@ -10,10 +10,11 @@ import ru.yandex.yandexlavka.model.entity.OrderEntity;
 public interface OrderMapper {
 
     @Mapping(target = "id", source = "orderId")
-    OrderDto orderEntityToOrderDto(OrderEntity orderEntity);
+    OrderDto orderEntityToDto(OrderEntity orderEntity);
 
     @Mapping(target = "orderId", ignore = true)
     @Mapping(target = "completeTime", ignore = true)
-    OrderEntity createOrderDtoToEntity(CreateOrderDto createOrderDto);
+    @Mapping(target = "courier", ignore = true)
+    OrderEntity orderDtoToEntity(CreateOrderDto createOrderDto);
 
 }

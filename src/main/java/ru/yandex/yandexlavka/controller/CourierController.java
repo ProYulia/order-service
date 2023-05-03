@@ -1,5 +1,6 @@
 package ru.yandex.yandexlavka.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.yandexlavka.model.dto.CourierDto;
@@ -32,7 +33,7 @@ public class CourierController {
     }
 
     @PostMapping()
-    public CreateCourierResponse addCouriers(@RequestBody CreateCourierRequest createCourier) {
+    public CreateCourierResponse addCouriers(@Valid @RequestBody CreateCourierRequest createCourier) {
 
         List<CreateCourierDto> courierDtoList = createCourier.getCreateCourierDtoList();
         return courierService.saveCouriers(courierDtoList);

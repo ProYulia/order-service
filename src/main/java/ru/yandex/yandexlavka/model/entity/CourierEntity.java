@@ -2,6 +2,7 @@ package ru.yandex.yandexlavka.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 @Table(name = "courier")
 @Getter
 @Setter
+@NoArgsConstructor
 public class CourierEntity {
 
     @Id
@@ -18,7 +20,7 @@ public class CourierEntity {
     @Column(name = "courier_id")
     private int courierID;
 
-    //@Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     @Column(name = "courier_type")
     private CourierType courierType;
 
@@ -34,17 +36,6 @@ public class CourierEntity {
     @Column(name = "working_hours")
     private List<String> workingHours;
 
-
-    public CourierEntity() {
-    }
-
-    public CourierEntity(CourierType courierType,
-                         List<Integer> regions,
-                         List<String> workingHours) {
-        this.courierType = courierType;
-        this.regions = regions;
-        this.workingHours = workingHours;
-    }
 
     public enum CourierType {
         FOOT("FOOT"),
