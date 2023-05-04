@@ -44,4 +44,5 @@ public class CourierControllerTest {
         mockMvc.perform(post("/couriers").content(mapper.writeValueAsString(request)).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isBadRequest());
     }
+
 }

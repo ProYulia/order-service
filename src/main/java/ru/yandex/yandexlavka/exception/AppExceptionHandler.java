@@ -1,5 +1,6 @@
 package ru.yandex.yandexlavka.exception;
 
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,4 +31,10 @@ public class AppExceptionHandler {
         NotFoundResponse notFoundResponse = new NotFoundResponse(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(notFoundResponse, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler({ RequestNotPermitted.class })
+    @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
+    public void handleRequestNotPermitted() {
+    }
+
 }

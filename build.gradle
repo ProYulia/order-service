@@ -21,6 +21,11 @@ dependencies {
     implementation 'org.mapstruct:mapstruct:1.5.4.Final'
     implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
 
+    implementation 'io.github.resilience4j:resilience4j-ratelimiter:2.0.2'
+    implementation 'io.github.resilience4j:resilience4j-spring-boot2:2.0.2'
+
+
+
     runtimeOnly 'org.postgresql:postgresql'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
