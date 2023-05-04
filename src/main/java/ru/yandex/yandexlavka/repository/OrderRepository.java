@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.yandex.yandexlavka.model.entity.OrderEntity;
 
+import java.time.Instant;
 import java.util.List;
 
 @Repository
@@ -15,12 +16,14 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Integer> {
     @Query(value = "SELECT * from orders limit :limit offset :offset", nativeQuery = true)
     List<OrderEntity> findAll(Integer offset, Integer limit);
 
+    OrderEntity findByOrderId(Integer order_id);
+
     @Modifying
-    @Query(value = "UPDATE orders o SET o.complete_time =:complete_time WHERE o.order_id =:order_id AND o.courier_id=:courier_id ",
+    @Query(value = "UPDATE orders SET complete_time =:complete_time WHERE order_id =:order_id AND courier_id=:courier_id ",
             nativeQuery = true)
-    OrderEntity updateByOrderId(@Param("order_id") Integer order_id,
-                                @Param("courier_id") Integer courier_id,
-                                @Param("complete_time") String complete_time);
+    int updateByOrderId(@Param("order_id") Integer order_id,
+                         @Param("courier_id") Integer courier_id,
+                         @Param("complete_time") Instant complete_time);
 
 
     @Modifying

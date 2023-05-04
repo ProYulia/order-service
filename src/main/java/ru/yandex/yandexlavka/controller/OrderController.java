@@ -36,7 +36,7 @@ public class OrderController {
         return orderService.saveAllOrders(createOrderDtoList);
     }
 
-    @PatchMapping("/complete") //TODO Обработчик должен быть идемпотентным
+    @PostMapping("/complete") //TODO Обработчик должен быть идемпотентным
     public List<OrderDto> completeOrders(@RequestBody CompleteOrderRequest completedOrders) {
         return orderService.completeOrders(completedOrders);
     }

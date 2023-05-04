@@ -2,7 +2,9 @@ package ru.yandex.yandexlavka.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import ru.yandex.yandexlavka.exception.BadRequestResponse;
 import ru.yandex.yandexlavka.mapper.OrderMapper;
 import ru.yandex.yandexlavka.model.dto.CompletedOrderDto;
 import ru.yandex.yandexlavka.model.dto.CreateOrderDto;
@@ -11,8 +13,10 @@ import ru.yandex.yandexlavka.model.entity.OrderEntity;
 import ru.yandex.yandexlavka.model.request.CompleteOrderRequest;
 import ru.yandex.yandexlavka.repository.OrderRepository;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class OrderService {
@@ -80,9 +84,12 @@ public class OrderService {
 
             Integer orderId = order.getOrderId();
             Integer courierId = order.getCourierId();
-            String completeTime = order.getCompleteTime();
+            Instant completeTime = Instant.parse(order.getCompleteTime());
 
-            OrderEntity entity = orderRepository.updateByOrderId(orderId, courierId, completeTime);
+            int entitiesModified = orderRepository.updateByOrderId(orderId, courierId, completeTime);
+            if (entitiesModified == 0) throw new RuntimeException(); //todo
+
+            OrderEntity entity = orderRepository.findByOrderId(orderId);
             orderDtoList.add(orderMapper.orderEntityToDto(entity));
         }
 
