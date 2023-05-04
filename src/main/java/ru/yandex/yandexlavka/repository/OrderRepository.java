@@ -21,4 +21,10 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Integer> {
     OrderEntity updateByOrderId(@Param("order_id") Integer order_id,
                                 @Param("courier_id") Integer courier_id,
                                 @Param("complete_time") String complete_time);
+
+
+    @Modifying
+    @Query(value = "UPDATE orders SET courier_id=:courier_id WHERE order_id=:order_id", nativeQuery = true)
+    void updateOrderEntityByOrderId(@Param("order_id") Integer order_id,
+                                    @Param("courier_id") Integer courier_id);
 }

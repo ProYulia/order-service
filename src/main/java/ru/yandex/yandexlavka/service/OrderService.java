@@ -14,7 +14,6 @@ import ru.yandex.yandexlavka.repository.OrderRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Service
 public class OrderService {
 
@@ -25,6 +24,8 @@ public class OrderService {
     @Autowired
     private OrderMapper orderMapper;
 
+    @Autowired
+    private AssignOrderService assignOrderService;
 
     @Transactional
     public List<OrderDto> getAllOrders(Integer offset, Integer limit) {
@@ -61,6 +62,7 @@ public class OrderService {
         }
 
         orderRepository.saveAll(orderEntityList);
+        assignOrderService.assignOrderToCourier(orderEntityList); //todo
 
         return orderEntityList
                 .stream()
@@ -86,4 +88,6 @@ public class OrderService {
 
         return orderDtoList;
     }
+
+
 }
