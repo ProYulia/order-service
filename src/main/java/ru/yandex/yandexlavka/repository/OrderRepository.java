@@ -30,4 +30,21 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Integer> {
     @Query(value = "UPDATE orders SET courier_id=:courier_id WHERE order_id=:order_id", nativeQuery = true)
     void updateOrderEntityByOrderId(@Param("order_id") Integer order_id,
                                     @Param("courier_id") Integer courier_id);
+
+
+    @Query(value =
+            "SELECT SUM(cost) FROM orders " +
+                    "WHERE courier_id=:courier_id AND (complete_time >=:startTime AND complete_time <:endTime)",
+            nativeQuery = true)
+    int getTotalOrderCost(@Param("courier_id") Integer courier_id,
+                          @Param("startTime") Instant startTime,
+                          @Param("endTime") Instant endTime);
+
+
+    @Query(value = "SELECT COUNT(order_id) FROM orders " +
+            "WHERE courier_id=:courier_id AND (complete_time >=:startTime AND complete_time <:endTime)",
+            nativeQuery = true)
+    int getTotalOrderCount(@Param("courier_id") Integer courier_id,
+                           @Param("startTime") Instant startTime,
+                           @Param("endTime") Instant endTime);
 }

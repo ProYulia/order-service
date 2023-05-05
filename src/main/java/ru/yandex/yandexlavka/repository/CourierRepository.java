@@ -12,7 +12,10 @@ public interface CourierRepository extends JpaRepository<CourierEntity, Integer>
     @Query(value = "SELECT * from courier limit :limit offset :offset", nativeQuery = true)
     List<CourierEntity> findAll(Integer offset, Integer limit);
 
+
     @Query(value = "SELECT courier_id FROM courier ORDER BY courier_id DESC LIMIT 1", nativeQuery = true)
     int lastCourierId();
+
+    CourierEntity findByCourierId(Integer courierId);
 
 }

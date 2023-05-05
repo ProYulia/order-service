@@ -8,7 +8,9 @@ import ru.yandex.yandexlavka.model.dto.CourierDto;
 import ru.yandex.yandexlavka.model.dto.CreateCourierDto;
 import ru.yandex.yandexlavka.model.request.CreateCourierRequest;
 import ru.yandex.yandexlavka.model.response.CreateCourierResponse;
+import ru.yandex.yandexlavka.model.response.GetCourierMetaInfoResponse;
 import ru.yandex.yandexlavka.model.response.GetCouriersResponse;
+import ru.yandex.yandexlavka.model.response.OrderAssignResponse;
 import ru.yandex.yandexlavka.service.CourierService;
 
 import java.util.List;
@@ -43,7 +45,19 @@ public class CourierController {
         return courierService.saveCouriers(courierDtoList);
     }
 
+    @GetMapping("/meta-info/{courierID}")
+    @RateLimiter(name = "rateLimiterApi")
+    public GetCourierMetaInfoResponse getMetaInfo(@PathVariable int courierId,
+                                                  @RequestParam(name = "startDate") String startDate,
+                                                  @RequestParam(name = "endDate") String endDate) {
 
+        return courierService.getMetaInfo(courierId, startDate, endDate);
+    }
 
+//    @GetMapping("/assignments")
+//    @RateLimiter(name = "rateLimiterApi")
+//    public OrderAssignResponse getCouriersAssignments() {
+//        return courierService.getAssignments();
+//    }
 
 }

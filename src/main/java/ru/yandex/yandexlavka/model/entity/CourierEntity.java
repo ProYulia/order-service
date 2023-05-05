@@ -18,7 +18,7 @@ public class CourierEntity {
     @SequenceGenerator(name = "courierSequence", sequenceName = "courier_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "courierSequence")
     @Column(name = "courier_id")
-    private int courierID;
+    private Integer courierId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "courier_type")

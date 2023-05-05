@@ -1,20 +1,20 @@
 package ru.yandex.yandexlavka.model.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.springframework.stereotype.Component;
+import jakarta.validation.Valid;
+import lombok.*;
 import ru.yandex.yandexlavka.model.dto.CreateOrderDto;
 
 import java.util.List;
 
-@Component
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateOrderRequest {
 
-    @JsonProperty(value = "orders")
+    @Valid
+    @JsonProperty("orders")
     List<CreateOrderDto> createOrderDtoList;
 }
