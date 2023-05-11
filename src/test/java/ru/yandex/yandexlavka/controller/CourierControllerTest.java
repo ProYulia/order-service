@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.yandex.yandexlavka.model.dto.CreateCourierDto;
 import ru.yandex.yandexlavka.model.request.CreateCourierRequest;
-import ru.yandex.yandexlavka.service.CourierService;
+import ru.yandex.yandexlavka.service.impl.CourierServiceImpl;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class CourierControllerTest {
     private ObjectMapper mapper;
 
     @MockBean
-    private CourierService courierService;
+    private CourierServiceImpl courierServiceImpl;
 
     @Test
     public void testShouldNotCreateWrongCourier() throws Exception {

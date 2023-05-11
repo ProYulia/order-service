@@ -4,7 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.yandex.yandexlavka.model.entity.CourierEntity;
+import ru.yandex.yandexlavka.model.response.OrderAssignResponse;
 
+import java.time.Instant;
 import java.util.List;
 
 @Repository
@@ -18,4 +20,5 @@ public interface CourierRepository extends JpaRepository<CourierEntity, Integer>
 
     CourierEntity findByCourierId(Integer courierId);
 
+    //OrderAssignResponse findCouriersAssignments(Instant requestDate);
 }

@@ -39,7 +39,5 @@ public class OrderEntity {
     @Column(name = "complete_time")
     private Instant completeTime;
 
-    @Column(name = "courier_id")
-    private Integer courier;
 
 }

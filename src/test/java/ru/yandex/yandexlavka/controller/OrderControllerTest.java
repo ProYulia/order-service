@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.yandex.yandexlavka.model.dto.CreateOrderDto;
 import ru.yandex.yandexlavka.model.request.CreateOrderRequest;
-import ru.yandex.yandexlavka.service.OrderService;
+import ru.yandex.yandexlavka.service.impl.OrderServiceImpl;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class OrderControllerTest {
     private ObjectMapper mapper;
 
     @MockBean
-    private OrderService orderService;
+    private OrderServiceImpl orderServiceImpl;
 
     @Test
     public void testShouldNotCreateWrongOrder() throws Exception {

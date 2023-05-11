@@ -23,7 +23,7 @@ public class AppExceptionHandler {
         return new  ResponseEntity<>(badRequestResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler
+    @ExceptionHandler({NoSuchElementException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<NotFoundResponse> handleNotFoundException(NoSuchElementException exception) {
 

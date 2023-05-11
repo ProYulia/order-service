@@ -14,6 +14,7 @@ public interface CourierMapper {
 
 
     @Mapping(target = "courierId", ignore = true)
+    @Mapping(target = "orderGroups", ignore = true)
     CourierEntity courierDtoToEntity(CreateCourierDto createCourierDto);
 
 

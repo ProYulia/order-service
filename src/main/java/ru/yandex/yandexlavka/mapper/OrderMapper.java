@@ -14,7 +14,6 @@ public interface OrderMapper {
 
     @Mapping(target = "orderId", ignore = true)
     @Mapping(target = "completeTime", ignore = true)
-    @Mapping(target = "courier", ignore = true)
     OrderEntity orderDtoToEntity(CreateOrderDto createOrderDto);
 
 }

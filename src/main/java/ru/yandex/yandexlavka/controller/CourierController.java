@@ -2,7 +2,7 @@ package ru.yandex.yandexlavka.controller;
 
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.yandexlavka.model.dto.CourierDto;
 import ru.yandex.yandexlavka.model.dto.CreateCourierDto;
@@ -15,13 +15,13 @@ import ru.yandex.yandexlavka.service.CourierService;
 
 import java.util.List;
 
+import static ru.yandex.yandexlavka.controller.ConstantList.*;
+
 @RestController
-@RequestMapping("/couriers")
+@RequiredArgsConstructor
 public class CourierController {
 
-    @Autowired
-    private CourierService courierService;
-
+    private final CourierService courierService;
 
     @GetMapping
     @RateLimiter(name = "rateLimiterApi")
@@ -31,10 +31,11 @@ public class CourierController {
         return courierService.getAllCouriers(offset, limit);
     }
 
-    @GetMapping("/{courierID}")
+    @GetMapping(SINGLE_COURIER_PATH)
     @RateLimiter(name = "rateLimiterApi")
-    public CourierDto getCourierByID(@PathVariable int courierID) {
-        return courierService.getCourierByID(courierID);
+    public CourierDto getCourierByID(@PathVariable int courierId) {
+
+        return courierService.getCourierByID(courierId);
     }
 
     @PostMapping()
@@ -45,7 +46,7 @@ public class CourierController {
         return courierService.saveCouriers(courierDtoList);
     }
 
-    @GetMapping("/meta-info/{courierID}")
+    @GetMapping(COURIER_META_INFO_PATH)
     @RateLimiter(name = "rateLimiterApi")
     public GetCourierMetaInfoResponse getMetaInfo(@PathVariable int courierId,
                                                   @RequestParam(name = "startDate") String startDate,
@@ -54,10 +55,12 @@ public class CourierController {
         return courierService.getMetaInfo(courierId, startDate, endDate);
     }
 
-//    @GetMapping("/assignments")
-//    @RateLimiter(name = "rateLimiterApi")
-//    public OrderAssignResponse getCouriersAssignments() {
-//        return courierService.getAssignments();
-//    }
+    @GetMapping(COURIER_ASSIGNMENTS_PATH)
+    @RateLimiter(name = "rateLimiterApi")
+    public OrderAssignResponse getCouriersAssignments(@RequestParam(name = "date") String date,
+                                                      @RequestParam(name = "courier_id") Integer courierId) {
+
+        return courierService.getAssignments(date, courierId);
+    }
 
 }

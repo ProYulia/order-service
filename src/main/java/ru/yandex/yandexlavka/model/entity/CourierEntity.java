@@ -36,6 +36,10 @@ public class CourierEntity {
     @Column(name = "working_hours")
     private List<String> workingHours;
 
+    @OneToMany
+    @JoinColumn(name = "group_id")
+    private List<GroupOrdersEntity> orderGroups;
+
 
     public enum CourierType {
         FOOT("FOOT"),
@@ -50,5 +54,6 @@ public class CourierEntity {
             this.value = value;
         }
     }
+
 
 }

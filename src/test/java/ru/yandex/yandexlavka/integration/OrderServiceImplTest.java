@@ -1,7 +1,6 @@
 package ru.yandex.yandexlavka.integration;
 
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,23 +8,21 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.yandexlavka.model.dto.CreateCourierDto;
 import ru.yandex.yandexlavka.model.dto.CreateOrderDto;
 import ru.yandex.yandexlavka.model.entity.CourierEntity;
-import ru.yandex.yandexlavka.model.entity.OrderEntity;
 import ru.yandex.yandexlavka.repository.OrderRepository;
-import ru.yandex.yandexlavka.service.CourierService;
-import ru.yandex.yandexlavka.service.OrderService;
+import ru.yandex.yandexlavka.service.impl.CourierServiceImpl;
+import ru.yandex.yandexlavka.service.impl.OrderServiceImpl;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @SpringBootTest
-public class OrderServiceTest {
+public class OrderServiceImplTest {
 
     @Autowired
-    private OrderService orderService;
+    private OrderServiceImpl orderServiceImpl;
 
     @Autowired
-    private CourierService courierService;
+    private CourierServiceImpl courierServiceImpl;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -71,7 +68,7 @@ public class OrderServiceTest {
                 Arrays.asList(0, 1),
                 List.of("10:00-18:00")));
 
-        courierService.saveCouriers(createCourierDto);
+        courierServiceImpl.saveCouriers(createCourierDto);
 
         // creating an order
         List<CreateOrderDto> createOrderDtos = List.of(new CreateOrderDto(1.1F,
@@ -79,6 +76,6 @@ public class OrderServiceTest {
                 List.of("10:00-12:00"),
                 100));
 
-        orderService.saveAllOrders(createOrderDtos);
+        orderServiceImpl.saveAllOrders(createOrderDtos);
     }
 }

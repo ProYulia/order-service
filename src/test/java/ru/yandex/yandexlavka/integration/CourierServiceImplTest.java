@@ -8,17 +8,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.yandexlavka.model.dto.CreateCourierDto;
 import ru.yandex.yandexlavka.model.entity.CourierEntity;
 import ru.yandex.yandexlavka.repository.CourierRepository;
-import ru.yandex.yandexlavka.service.CourierService;
+import ru.yandex.yandexlavka.service.impl.CourierServiceImpl;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @SpringBootTest
-public class CourierServiceTest {
+public class CourierServiceImplTest {
 
     @Autowired
-    private CourierService courierService;
+    private CourierServiceImpl courierServiceImpl;
 
     @Autowired
     CourierRepository courierRepository;
@@ -73,7 +72,7 @@ public class CourierServiceTest {
                 Arrays.asList(0, 1),
                 List.of("10:00-18:00")));
 
-        courierService.saveCouriers(createCourierDto);
+        courierServiceImpl.saveCouriers(createCourierDto);
     }
 
 
