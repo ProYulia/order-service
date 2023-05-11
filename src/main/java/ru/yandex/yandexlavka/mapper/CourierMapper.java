@@ -3,6 +3,7 @@ package ru.yandex.yandexlavka.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.yandex.yandexlavka.model.dto.CourierDto;
+import ru.yandex.yandexlavka.model.dto.CouriersGroupsOrders;
 import ru.yandex.yandexlavka.model.dto.CreateCourierDto;
 import ru.yandex.yandexlavka.model.entity.CourierEntity;
 import ru.yandex.yandexlavka.model.response.GetCourierMetaInfoResponse;
@@ -28,5 +29,8 @@ public interface CourierMapper {
                                                         Integer rating,
                                                         Integer earnings,
                                                         String courierType);
+
+
+    //CouriersGroupsOrders entityToCouriersGroupOrders(CourierEntity courierEntity);
 
 }

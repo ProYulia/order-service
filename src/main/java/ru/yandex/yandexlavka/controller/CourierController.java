@@ -23,7 +23,7 @@ public class CourierController {
 
     private final CourierService courierService;
 
-    @GetMapping
+    @GetMapping(COURIER_BASE_PATH)
     @RateLimiter(name = "rateLimiterApi")
     public GetCouriersResponse getAllCouriers(@RequestParam(name = "offset", required = false) Integer offset,
                                               @RequestParam(name = "limit", required = false) Integer limit) {
@@ -38,7 +38,7 @@ public class CourierController {
         return courierService.getCourierByID(courierId);
     }
 
-    @PostMapping()
+    @PostMapping(COURIER_BASE_PATH)
     @RateLimiter(name = "rateLimiterApi")
     public CreateCourierResponse addCouriers(@Valid @RequestBody CreateCourierRequest createCourier) {
 

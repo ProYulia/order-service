@@ -20,7 +20,7 @@ public class GroupOrdersEntity {
     @Column(name = "group_id")
     private Integer groupId;
 
-    @OneToMany
-    @JoinColumn(name = "order_id")
-    private List<OrderEntity> orders;
+//    @OneToMany
+//    @JoinColumn(name = "order_id", )
+//    private List<OrderEntity> orders;
 }
