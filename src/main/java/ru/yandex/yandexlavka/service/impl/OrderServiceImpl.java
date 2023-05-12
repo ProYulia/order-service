@@ -2,7 +2,6 @@ package ru.yandex.yandexlavka.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.yandexlavka.mapper.OrderMapper;
 import ru.yandex.yandexlavka.model.dto.CompletedOrderDto;

@@ -1,15 +1,13 @@
 package ru.yandex.yandexlavka.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.yandexlavka.mapper.OrderMapper;
-import ru.yandex.yandexlavka.model.dto.CouriersGroupsOrders;
-import ru.yandex.yandexlavka.model.dto.GroupOrders;
-import ru.yandex.yandexlavka.model.dto.OrderDto;
 import ru.yandex.yandexlavka.model.entity.CourierEntity;
+import ru.yandex.yandexlavka.model.entity.CouriersGroupsOrdersEntity;
 import ru.yandex.yandexlavka.model.entity.OrderEntity;
 import ru.yandex.yandexlavka.model.response.OrderAssignResponse;
 import ru.yandex.yandexlavka.repository.CourierRepository;
+import ru.yandex.yandexlavka.repository.CouriersGroupOrdersRepository;
 import ru.yandex.yandexlavka.repository.OrderRepository;
 import ru.yandex.yandexlavka.service.AssignOrderService;
 
@@ -21,19 +19,17 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class AssignOrderServiceImpl implements AssignOrderService {
 
-    @Autowired
-    private CourierRepository courierRepository;
+    private final CourierRepository courierRepository;
 
-    @Autowired
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
-    @Autowired
-    private OrderMapper orderMapper;
+    private final CouriersGroupOrdersRepository couriersGroupOrdersRepository;
     private final Map<Integer, List<Integer>> possibleAssignments = new HashMap<>();
     private final List<Integer> assignedOrders = new ArrayList<>();
-    private List<CouriersGroupsOrders> couriersGroupsOrdersList = new ArrayList<>();
+    private List<CouriersGroupsOrdersEntity> couriersGroupsOrdersList = new ArrayList<>();
     private CourierEntity courier;
 
 
@@ -44,16 +40,12 @@ public class AssignOrderServiceImpl implements AssignOrderService {
             courier = courierRepository.findByCourierId(courierId);
             createBatch(possibleAssignments.get(courierId));
         }
-        //couriersGroupsOrdersList.stream()
+
+        couriersGroupOrdersRepository.saveAll(couriersGroupsOrdersList);
+
         return null;
     }
 
-    private void addAssignmentsToDatabase() {
-        for (CouriersGroupsOrders orderGroup : couriersGroupsOrdersList) {
-            int courierId = orderGroup.getCourierId();
-            courierRepository.addGroupOrders();
-        }
-    }
 
     private void getPotentialAssignments() {
         List<Integer[]> courierToOrder = orderRepository.getPotentialAssignments();
@@ -92,8 +84,7 @@ public class AssignOrderServiceImpl implements AssignOrderService {
         int courierMaxDeliveries = calculateMaxDeliveries();
         int slotsLeft = courierMaxDeliveries * maxCapacity;
 
-        List<GroupOrders> groupOrders = new ArrayList<>();
-        List<OrderDto> batch = new ArrayList<>(maxCapacity);
+        List<Integer> orderBatch = new ArrayList<>(maxCapacity);
         List<Integer> currentRegions = new ArrayList<>(maxRegions);
 
         for(Integer orderId : possibleOrders) {
@@ -103,12 +94,12 @@ public class AssignOrderServiceImpl implements AssignOrderService {
             if (currentRegions.size() == maxRegions && !currentRegions.contains(order.getRegion())) continue;
             if (courierMaxDeliveries == slotsLeft) return;
 
-            if (batch.size() == maxCapacity) {
-                groupOrders.add(new GroupOrders(batch));
-                batch = new ArrayList<>(maxCapacity);
+            if (orderBatch.size() == maxCapacity) {
+                couriersGroupsOrdersList.add(new CouriersGroupsOrdersEntity(courier.getCourierId(), orderBatch));
+                orderBatch = new ArrayList<>(maxCapacity);
             }
 
-            batch.add(orderMapper.orderEntityToDto(order));
+            orderBatch.add(order.getOrderId());
             slotsLeft -= 1;
             if (!currentRegions.contains(order.getRegion())) {
                 currentRegions.add(order.getRegion());
@@ -116,10 +107,7 @@ public class AssignOrderServiceImpl implements AssignOrderService {
             weightLeft -= order.getWeight();
             assignedOrders.add(orderId);
         }
-        groupOrders.add(new GroupOrders(batch));
-        couriersGroupsOrdersList.add(new CouriersGroupsOrders(courier.getCourierId(), groupOrders));
-
-        courier.setOrderGroups();
+        couriersGroupsOrdersList.add(new CouriersGroupsOrdersEntity(courier.getCourierId(), orderBatch));
     }
 
 

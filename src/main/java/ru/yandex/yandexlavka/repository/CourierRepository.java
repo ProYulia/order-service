@@ -21,9 +21,6 @@ public interface CourierRepository extends JpaRepository<CourierEntity, Integer>
 
     CourierEntity findByCourierId(Integer courierId);
 
-    @Modifying
-    @Query(value = "UPDATE couriers_orders SET ")
-    void addGroupOrders();
 
     //OrderAssignResponse findCouriersAssignments(Instant requestDate);
 
