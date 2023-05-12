@@ -40,7 +40,7 @@ public class OrderEntity {
     private Instant completeTime;
 
     @ManyToOne
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "group_id", nullable = true)
     private GroupOrdersEntity groupId;
 
 

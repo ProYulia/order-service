@@ -36,6 +36,8 @@ public class AssignOrderServiceImpl implements AssignOrderService {
     private List<CouriersGroupsOrders> couriersGroupsOrdersList = new ArrayList<>();
     private CourierEntity courier;
 
+
+
     public OrderAssignResponse assignOrdersToCouriers(String date) {
         getPotentialAssignments();
         for(Integer courierId : possibleAssignments.keySet()) {
@@ -43,6 +45,14 @@ public class AssignOrderServiceImpl implements AssignOrderService {
             createBatch(possibleAssignments.get(courierId));
         }
         //couriersGroupsOrdersList.stream()
+        return null;
+    }
+
+    private void addAssignmentsToDatabase() {
+        for (CouriersGroupsOrders orderGroup : couriersGroupsOrdersList) {
+            int courierId = orderGroup.getCourierId();
+            courierRepository.addGroupOrders();
+        }
     }
 
     private void getPotentialAssignments() {
@@ -108,6 +118,8 @@ public class AssignOrderServiceImpl implements AssignOrderService {
         }
         groupOrders.add(new GroupOrders(batch));
         couriersGroupsOrdersList.add(new CouriersGroupsOrders(courier.getCourierId(), groupOrders));
+
+        courier.setOrderGroups();
     }
 
 

@@ -1,6 +1,7 @@
 package ru.yandex.yandexlavka.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.yandex.yandexlavka.model.entity.CourierEntity;
@@ -19,6 +20,10 @@ public interface CourierRepository extends JpaRepository<CourierEntity, Integer>
     int lastCourierId();
 
     CourierEntity findByCourierId(Integer courierId);
+
+    @Modifying
+    @Query(value = "UPDATE couriers_orders SET ")
+    void addGroupOrders();
 
     //OrderAssignResponse findCouriersAssignments(Instant requestDate);
 
