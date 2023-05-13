@@ -51,7 +51,7 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Integer> {
 
 
     @Query(value =
-    "select distinct orders.order_id, t1.courier_id, order_start_time, order_end_time, weight, courier_type\n" +
+    "select distinct orders.order_id, t1.courier_id\n" +
             "from orders\n" +
             "    join delivery_hours dh on orders.order_id = dh.order_id\n" +
             "    join regions on orders.region = regions.regions\n" +
@@ -70,8 +70,7 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Integer> {
             "where (courier_type = 'FOOT' and weight <= 10) or\n" +
             "      (courier_type = 'BIKE' and weight <= 20) or\n" +
             "      (courier_type = 'AUTO' and weight <= 40) and\n" +
-            "      orders.complete_time is null\n" +
-            "order by order_start_time;",
+            "      orders.complete_time is null;",
             nativeQuery = true)
     List<Integer[]> getPotentialAssignments();
 

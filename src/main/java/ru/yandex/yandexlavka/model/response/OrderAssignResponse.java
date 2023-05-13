@@ -1,5 +1,6 @@
 package ru.yandex.yandexlavka.model.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,10 +12,10 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@Component
+@AllArgsConstructor
 public class OrderAssignResponse {
 
     private String date;
-    private List<CouriersGroupsOrders> couriersGroupsOrdersList;
+    private List<CouriersGroupsOrders> couriers;
 
 }

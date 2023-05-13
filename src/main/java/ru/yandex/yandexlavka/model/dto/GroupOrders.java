@@ -18,7 +18,4 @@ public class GroupOrders {
     @JsonProperty(value = "orders")
     private List<OrderDto> orders;
 
-    public GroupOrders(List<OrderDto> orders) {
-        this.orders = orders;
-    }
 }

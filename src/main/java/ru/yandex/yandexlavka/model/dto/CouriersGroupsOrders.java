@@ -12,6 +12,6 @@ import java.util.List;
 public class CouriersGroupsOrders {
 
     private Integer courierId;
-    private List<GroupOrders> orderGroups;
+    private List<GroupOrders> orders;
 
 }

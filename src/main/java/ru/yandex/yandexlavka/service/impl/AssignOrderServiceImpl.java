@@ -2,6 +2,11 @@ package ru.yandex.yandexlavka.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.yandex.yandexlavka.mapper.CouriersGroupsOrdersMapper;
+import ru.yandex.yandexlavka.mapper.OrderMapper;
+import ru.yandex.yandexlavka.model.dto.CouriersGroupsOrders;
+import ru.yandex.yandexlavka.model.dto.GroupOrders;
+import ru.yandex.yandexlavka.model.dto.OrderDto;
 import ru.yandex.yandexlavka.model.entity.CourierEntity;
 import ru.yandex.yandexlavka.model.entity.CouriersGroupsOrdersEntity;
 import ru.yandex.yandexlavka.model.entity.OrderEntity;
@@ -11,7 +16,11 @@ import ru.yandex.yandexlavka.repository.CouriersGroupOrdersRepository;
 import ru.yandex.yandexlavka.repository.OrderRepository;
 import ru.yandex.yandexlavka.service.AssignOrderService;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +34,10 @@ public class AssignOrderServiceImpl implements AssignOrderService {
     private final CourierRepository courierRepository;
 
     private final OrderRepository orderRepository;
+
+    private final OrderMapper orderMapper;
+
+    private final CouriersGroupsOrdersMapper couriersGroupsOrdersMapper;
 
     private final CouriersGroupOrdersRepository couriersGroupOrdersRepository;
     private final Map<Integer, List<Integer>> possibleAssignments = new HashMap<>();
@@ -41,9 +54,33 @@ public class AssignOrderServiceImpl implements AssignOrderService {
             createBatch(possibleAssignments.get(courierId));
         }
 
-        couriersGroupOrdersRepository.saveAll(couriersGroupsOrdersList);
+        List<CouriersGroupsOrdersEntity> couriersGroupsOrdersEntities = couriersGroupOrdersRepository
+                .saveAll(couriersGroupsOrdersList);
 
-        return null;
+        Map<Integer, List<GroupOrders>> courierMap = new HashMap<>();
+
+        for (CouriersGroupsOrdersEntity groupEntity : couriersGroupsOrdersEntities) {
+            List<Integer> orderIdList = groupEntity.getOrders();
+            List<OrderEntity> orderEntityList = orderIdList.stream().map(orderRepository::findByOrderId).toList();
+            List<OrderDto> orderDtoList = orderEntityList.stream().map(orderMapper::orderEntityToDto).toList();
+            GroupOrders groupOrders = couriersGroupsOrdersMapper.toGroupOrders(groupEntity, orderDtoList);
+
+            if(!courierMap.containsKey(groupEntity.getCourierId())) {
+                courierMap.put(groupEntity.getCourierId(), new ArrayList<>());
+            }
+            courierMap.get(groupEntity.getCourierId()).add(groupOrders);
+        }
+
+        List<CouriersGroupsOrders> couriersGroupsOrders = new ArrayList<>();
+        for(Map.Entry<Integer, List<GroupOrders>> entry : courierMap.entrySet()) {
+            couriersGroupsOrders.add(couriersGroupsOrdersMapper.couriersGroupsOrdersToDto(entry.getKey(), entry.getValue()));
+        }
+
+        if(date == null) {
+            date = LocalDate.now().toString();
+        }
+
+        return new OrderAssignResponse(date, couriersGroupsOrders);
     }
 
 
@@ -111,7 +148,7 @@ public class AssignOrderServiceImpl implements AssignOrderService {
     }
 
 
-    private int calculateMaxDeliveries() {
+    private int calculateMaxDeliveries()  {
         List<String> workingHours = courier.getWorkingHours();
         int maxSlots = 0;
         int deliveryDuration = 0;
@@ -122,8 +159,17 @@ public class AssignOrderServiceImpl implements AssignOrderService {
         }
 
         for(String shift : workingHours) {
-            Instant startTime = Instant.parse(shift.substring(0, 6));
-            Instant endTime = Instant.parse(shift.substring(6, 11));
+
+                DateFormat dateFormat = new SimpleDateFormat("hh:mm");
+            Instant startTime = null;
+            Instant endTime = null;
+            try {
+                startTime = dateFormat.parse(shift.substring(0, 5)).toInstant();
+                endTime = dateFormat.parse(shift.substring(6, 11)).toInstant();
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+
             long totalTime = ChronoUnit.MINUTES.between(startTime, endTime);
             while(totalTime >= 0) {
                 maxSlots++;

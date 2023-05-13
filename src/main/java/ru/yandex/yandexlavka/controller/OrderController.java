@@ -21,7 +21,7 @@ import static ru.yandex.yandexlavka.controller.ConstantList.*;
 public class OrderController {
 
     private final OrderService orderService;
-    //private final AssignOrderService assignOrderService;
+    private final AssignOrderService assignOrderService;
 
     @GetMapping(ORDER_BASE_PATH)
     public List<OrderDto> getAllOrders(@RequestParam(name = "offset", required = false) Integer offset,
@@ -45,12 +45,12 @@ public class OrderController {
         return orderService.completeOrders(completedOrders);
     }
 
-//    @PostMapping(ASSIGN_ORDERS_PATH)
-//    @RateLimiter(name = "rateLimiterApi")
-//    public OrderAssignResponse assignOrders(@RequestParam(name = "date") String date) {
-//
-//        return assignOrderService.assignOrdersToCouriers(date);
-//    }
+    @PostMapping(ASSIGN_ORDERS_PATH)
+    @RateLimiter(name = "rateLimiterApi")
+    public OrderAssignResponse assignOrders(@RequestParam(required = false, name = "date") String date) {
+
+        return assignOrderService.assignOrdersToCouriers(date);
+    }
 
     @GetMapping(SINGLE_ORDER_PATH)
     @RateLimiter(name = "rateLimiterApi")
