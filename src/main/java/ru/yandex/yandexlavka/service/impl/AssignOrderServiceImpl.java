@@ -3,8 +3,8 @@ package ru.yandex.yandexlavka.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.yandexlavka.model.entity.CourierEntity;
-import ru.yandex.yandexlavka.model.entity.CouriersGroupsOrdersEntity;
 import ru.yandex.yandexlavka.model.entity.OrderEntity;
+import ru.yandex.yandexlavka.model.entity.OrderGroupEntity;
 import ru.yandex.yandexlavka.model.response.OrderAssignResponse;
 import ru.yandex.yandexlavka.repository.CourierRepository;
 import ru.yandex.yandexlavka.repository.CouriersGroupOrdersRepository;
@@ -13,10 +13,7 @@ import ru.yandex.yandexlavka.service.AssignOrderService;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +26,7 @@ public class AssignOrderServiceImpl implements AssignOrderService {
     private final CouriersGroupOrdersRepository couriersGroupOrdersRepository;
     private final Map<Integer, List<Integer>> possibleAssignments = new HashMap<>();
     private final List<Integer> assignedOrders = new ArrayList<>();
-    private List<CouriersGroupsOrdersEntity> couriersGroupsOrdersList = new ArrayList<>();
+    private List<OrderGroupEntity> couriersGroupsOrdersList = new ArrayList<>();
     private CourierEntity courier;
 
 
@@ -95,7 +92,7 @@ public class AssignOrderServiceImpl implements AssignOrderService {
             if (courierMaxDeliveries == slotsLeft) return;
 
             if (orderBatch.size() == maxCapacity) {
-                couriersGroupsOrdersList.add(new CouriersGroupsOrdersEntity(courier.getCourierId(), orderBatch));
+                couriersGroupsOrdersList.add(new OrderGroupEntity(courier, Collections.emptyList()));
                 orderBatch = new ArrayList<>(maxCapacity);
             }
 
@@ -107,7 +104,7 @@ public class AssignOrderServiceImpl implements AssignOrderService {
             weightLeft -= order.getWeight();
             assignedOrders.add(orderId);
         }
-        couriersGroupsOrdersList.add(new CouriersGroupsOrdersEntity(courier.getCourierId(), orderBatch));
+        couriersGroupsOrdersList.add(new OrderGroupEntity(courier, Collections.emptyList()));
     }
 
 

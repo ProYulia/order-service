@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "courier")
@@ -35,6 +36,9 @@ public class CourierEntity {
     @CollectionTable(name = "working_hours", joinColumns = @JoinColumn(name = "courier_id"))
     @Column(name = "working_hours")
     private List<String> workingHours;
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<OrderGroupEntity> orderGroupEntities;
 
 
     public enum CourierType {
