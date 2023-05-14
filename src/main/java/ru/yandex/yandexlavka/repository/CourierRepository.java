@@ -22,7 +22,5 @@ public interface CourierRepository extends JpaRepository<CourierEntity, Integer>
     CourierEntity findByCourierId(Integer courierId);
 
 
-    //OrderAssignResponse findCouriersAssignments(Instant requestDate);
-
 
 }

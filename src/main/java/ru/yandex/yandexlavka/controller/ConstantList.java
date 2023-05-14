@@ -4,7 +4,7 @@ public class ConstantList {
 
     // paths for OrderController
     public static final String ORDER_BASE_PATH = "/orders";
-    public static final String SINGLE_ORDER_PATH = ORDER_BASE_PATH + "/{orderId}";
+    public static final String SINGLE_ORDER_PATH = ORDER_BASE_PATH + "/{order_id}";
     public static final String COMPLETE_ORDER_PATH = ORDER_BASE_PATH + "/complete";
     public static final String ASSIGN_ORDERS_PATH = ORDER_BASE_PATH + "/assign";
 

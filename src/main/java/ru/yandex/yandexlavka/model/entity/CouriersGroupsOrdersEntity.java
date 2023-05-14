@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -29,8 +30,12 @@ public class CouriersGroupsOrdersEntity {
     @Column(name = "order_id")
     private List<Integer> orders;
 
-    public CouriersGroupsOrdersEntity(Integer courierId, List<Integer> orders) {
+    @Column(name = "date")
+    private String date;
+
+    public CouriersGroupsOrdersEntity(Integer courierId, List<Integer> orders, String date) {
         this.courierId = courierId;
         this.orders = orders;
+        this.date = date;
     }
 }

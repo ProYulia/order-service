@@ -39,4 +39,8 @@ public class OrderEntity {
     @Column(name = "complete_time")
     private Instant completeTime;
 
+    @Column(name = "status")
+    private String orderStatus;
+
+
 }

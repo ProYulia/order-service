@@ -11,6 +11,7 @@ import ru.yandex.yandexlavka.model.response.CreateCourierResponse;
 import ru.yandex.yandexlavka.model.response.GetCourierMetaInfoResponse;
 import ru.yandex.yandexlavka.model.response.GetCouriersResponse;
 import ru.yandex.yandexlavka.model.response.OrderAssignResponse;
+import ru.yandex.yandexlavka.service.AssignOrderService;
 import ru.yandex.yandexlavka.service.CourierService;
 
 import java.util.List;
@@ -22,6 +23,7 @@ import static ru.yandex.yandexlavka.controller.ConstantList.*;
 public class CourierController {
 
     private final CourierService courierService;
+    private final AssignOrderService assignOrderService;
 
     @GetMapping(COURIER_BASE_PATH)
     @RateLimiter(name = "rateLimiterApi")
@@ -57,10 +59,10 @@ public class CourierController {
 
     @GetMapping(COURIER_ASSIGNMENTS_PATH)
     @RateLimiter(name = "rateLimiterApi")
-    public OrderAssignResponse getCouriersAssignments(@RequestParam(name = "date") String date,
-                                                      @RequestParam(name = "courier_id") Integer courierId) {
+    public OrderAssignResponse getCouriersAssignments(@RequestParam(required = false, name = "date") String date,
+                                                      @RequestParam(required = false, name = "courier_id") Integer courierId) {
 
-        return courierService.getAssignments(date, courierId);
+        return assignOrderService.getCourierAssignments(date, courierId);
     }
 
 }

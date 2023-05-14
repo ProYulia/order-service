@@ -1,5 +1,6 @@
 package ru.yandex.yandexlavka.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.yandexlavka.mapper.CourierMapper;
@@ -9,11 +10,13 @@ import ru.yandex.yandexlavka.model.entity.CourierEntity;
 import ru.yandex.yandexlavka.model.response.CreateCourierResponse;
 import ru.yandex.yandexlavka.model.response.GetCourierMetaInfoResponse;
 import ru.yandex.yandexlavka.model.response.GetCouriersResponse;
-import ru.yandex.yandexlavka.model.response.OrderAssignResponse;
 import ru.yandex.yandexlavka.repository.CourierRepository;
 import ru.yandex.yandexlavka.repository.OrderRepository;
 import ru.yandex.yandexlavka.service.CourierService;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -56,10 +59,13 @@ public class CourierServiceImpl implements CourierService {
     }
 
     public CourierDto getCourierByID(int courierID) {
+
+        if (courierID < 0) throw new IllegalArgumentException();
         CourierEntity courierEntity = courierRepository.findById(courierID).orElseThrow();
         return courierMapper.entityToCreateResponse(courierEntity);
     }
 
+    @Transactional
     public CreateCourierResponse saveCouriers(List<CreateCourierDto> createCourierDto) {
 
         List<CourierEntity> courierEntityList = new ArrayList<>();
@@ -82,13 +88,20 @@ public class CourierServiceImpl implements CourierService {
 
     public GetCourierMetaInfoResponse getMetaInfo(Integer courierId, String startDate, String endDate) {
 
-        Instant start = Instant.parse(startDate);
-        Instant end = Instant.parse(endDate);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Instant start = null;
+        Instant end = null;
+        try {
+            start = dateFormat.parse(startDate).toInstant();
+            end = dateFormat.parse(endDate).toInstant();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
 
         CourierEntity entity = courierRepository.findByCourierId(courierId);
         String courierType = entity.getCourierType().name();
-        int totalOrderCost = orderRepository.getTotalOrderCost(courierId, start, end);
-        int totalOrderCount = orderRepository.getTotalOrderCount(courierId, start, end);
+        Integer totalOrderCost = orderRepository.getTotalOrderCost(courierId, start, end);
+        Integer totalOrderCount = orderRepository.getTotalOrderCount(courierId, start, end);
 
         int multiplier;
         switch (courierType) {
@@ -98,28 +111,38 @@ public class CourierServiceImpl implements CourierService {
             default -> multiplier = 0;
         }
 
-        int earnings = totalOrderCost * multiplier;
-        int rating = (int) ((totalOrderCount / ChronoUnit.HOURS.between(start, end)) * multiplier);
+        // count courier working hours between start & end
+//        List<String> workingHours = entity.getWorkingHours();
+//        DateFormat timeFormat = new SimpleDateFormat("hh:mm");
+//        Instant startTime = null;
+//        Instant endTime = null;
+//        long totalWorkingHours = 0;
+//
+//        for(String shift : workingHours) {
+//            try {
+//                startTime = dateFormat.parse(shift.substring(0, 5)).toInstant();
+//                endTime = dateFormat.parse(shift.substring(6, 11)).toInstant();
+//                totalWorkingHours += ChronoUnit.HOURS.between(startTime, endTime);
+//            } catch (ParseException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//
+//        long periodWorkingHours = ChronoUnit.DAYS.between(start, end) * totalWorkingHours;
+
+        int earnings;
+        Integer rating;
+
+        if (totalOrderCount == null || totalOrderCost == null) {
+            rating = null;
+            earnings = 0;
+        } else {
+            earnings = totalOrderCost * multiplier;
+            long hoursBetween = ChronoUnit.HOURS.between(start, end);
+            rating = (int) ((totalOrderCount / hoursBetween) * multiplier);
+        }
 
         return courierMapper.entityToMetaInfoResponse(entity, rating, earnings, courierType);
     }
-
-    @Override
-    public OrderAssignResponse getAssignments(String date, Integer courierId) {
-        return null;
-    }
-
-//    public OrderAssignResponse getAssignments(String date, Integer courierId) {
-//
-//        Instant requestDate;
-//        if (date.isEmpty()) requestDate = Instant.now();
-//        else requestDate = Instant.parse(date);
-//
-//        if (courierId == null)
-//            return courierRepository.findCouriersAssignments(requestDate);
-//        else
-//            return courierRepository.findCouriersAssignments(requestDate, courierId);
-//    }
-
 
 }

@@ -23,5 +23,4 @@ public interface CourierService {
 
     GetCourierMetaInfoResponse getMetaInfo(Integer courierId, String startDate, String endDate);
 
-    OrderAssignResponse getAssignments(String date, Integer courierId);
 }

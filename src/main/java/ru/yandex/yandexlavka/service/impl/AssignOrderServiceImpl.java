@@ -1,5 +1,6 @@
 package ru.yandex.yandexlavka.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.yandexlavka.mapper.CouriersGroupsOrdersMapper;
@@ -47,15 +48,47 @@ public class AssignOrderServiceImpl implements AssignOrderService {
 
 
 
+    @Transactional
     public OrderAssignResponse assignOrdersToCouriers(String date) {
+        if(date == null) {
+            date = LocalDate.now().toString();
+        }
         getPotentialAssignments();
         for(Integer courierId : possibleAssignments.keySet()) {
             courier = courierRepository.findByCourierId(courierId);
-            createBatch(possibleAssignments.get(courierId));
+            createBatch(possibleAssignments.get(courierId), date);
         }
 
         List<CouriersGroupsOrdersEntity> couriersGroupsOrdersEntities = couriersGroupOrdersRepository
                 .saveAll(couriersGroupsOrdersList);
+
+        orderRepository.updateOrderStatus("ASSIGNED");
+
+        List<CouriersGroupsOrders> couriersGroupsOrders = createCouriersGroupsOrders(couriersGroupsOrdersEntities);
+
+        return new OrderAssignResponse(date, couriersGroupsOrders);
+    }
+
+    public OrderAssignResponse getCourierAssignments(String date, Integer courierId) {
+
+        if(date == null) date = LocalDate.now().toString();
+
+        List<CouriersGroupsOrdersEntity> couriersGroupsOrdersEntityList;
+
+        if (courierId == null) {
+            couriersGroupsOrdersEntityList = couriersGroupOrdersRepository.findAllByDate(date);
+        } else {
+            if (courierId < 0) throw new IllegalArgumentException();
+            couriersGroupsOrdersEntityList = couriersGroupOrdersRepository.findAllByCourierIdAndAndDate(courierId, date);
+        }
+
+        List<CouriersGroupsOrders> couriersGroupsOrders = createCouriersGroupsOrders(couriersGroupsOrdersEntityList);
+
+        return new OrderAssignResponse(date, couriersGroupsOrders);
+    }
+
+    private List<CouriersGroupsOrders> createCouriersGroupsOrders(
+            List<CouriersGroupsOrdersEntity> couriersGroupsOrdersEntities) {
 
         Map<Integer, List<GroupOrders>> courierMap = new HashMap<>();
 
@@ -76,11 +109,7 @@ public class AssignOrderServiceImpl implements AssignOrderService {
             couriersGroupsOrders.add(couriersGroupsOrdersMapper.couriersGroupsOrdersToDto(entry.getKey(), entry.getValue()));
         }
 
-        if(date == null) {
-            date = LocalDate.now().toString();
-        }
-
-        return new OrderAssignResponse(date, couriersGroupsOrders);
+        return couriersGroupsOrders;
     }
 
 
@@ -94,7 +123,7 @@ public class AssignOrderServiceImpl implements AssignOrderService {
         }
     }
 
-    private void createBatch(List<Integer> possibleOrders) {
+    private void createBatch(List<Integer> possibleOrders, String date) {
         int maxWeight = 0;
         int maxCapacity = 0;
         int maxRegions = 0;
@@ -132,7 +161,7 @@ public class AssignOrderServiceImpl implements AssignOrderService {
             if (courierMaxDeliveries == slotsLeft) return;
 
             if (orderBatch.size() == maxCapacity) {
-                couriersGroupsOrdersList.add(new CouriersGroupsOrdersEntity(courier.getCourierId(), orderBatch));
+                couriersGroupsOrdersList.add(new CouriersGroupsOrdersEntity(courier.getCourierId(), orderBatch, date));
                 orderBatch = new ArrayList<>(maxCapacity);
             }
 
@@ -144,7 +173,7 @@ public class AssignOrderServiceImpl implements AssignOrderService {
             weightLeft -= order.getWeight();
             assignedOrders.add(orderId);
         }
-        couriersGroupsOrdersList.add(new CouriersGroupsOrdersEntity(courier.getCourierId(), orderBatch));
+        couriersGroupsOrdersList.add(new CouriersGroupsOrdersEntity(courier.getCourierId(), orderBatch, date));
     }
 
 
@@ -160,7 +189,7 @@ public class AssignOrderServiceImpl implements AssignOrderService {
 
         for(String shift : workingHours) {
 
-                DateFormat dateFormat = new SimpleDateFormat("hh:mm");
+            DateFormat dateFormat = new SimpleDateFormat("hh:mm");
             Instant startTime = null;
             Instant endTime = null;
             try {

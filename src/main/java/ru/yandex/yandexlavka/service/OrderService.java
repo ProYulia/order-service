@@ -10,7 +10,7 @@ public interface OrderService {
 
     List<OrderDto> getAllOrders(Integer offset, Integer limit);
 
-    OrderDto getOrderById(int orderID);
+    OrderDto getOrderById(Integer orderID);
 
     List<OrderDto> saveAllOrders(List<CreateOrderDto> createOrderDtoList);
 

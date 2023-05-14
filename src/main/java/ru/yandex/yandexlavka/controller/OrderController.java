@@ -3,6 +3,7 @@ package ru.yandex.yandexlavka.controller;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.yandexlavka.model.dto.CreateOrderDto;
 import ru.yandex.yandexlavka.model.dto.OrderDto;
@@ -47,6 +48,7 @@ public class OrderController {
 
     @PostMapping(ASSIGN_ORDERS_PATH)
     @RateLimiter(name = "rateLimiterApi")
+    @ResponseStatus(HttpStatus.CREATED)
     public OrderAssignResponse assignOrders(@RequestParam(required = false, name = "date") String date) {
 
         return assignOrderService.assignOrdersToCouriers(date);
@@ -54,7 +56,7 @@ public class OrderController {
 
     @GetMapping(SINGLE_ORDER_PATH)
     @RateLimiter(name = "rateLimiterApi")
-    public OrderDto getOrderByID(@PathVariable int orderId) {
+    public OrderDto getOrderByID(@PathVariable(name = "order_id") Integer orderId) {
         return orderService.getOrderById(orderId);
     }
 

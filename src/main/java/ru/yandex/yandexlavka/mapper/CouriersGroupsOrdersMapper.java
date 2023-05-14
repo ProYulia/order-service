@@ -11,9 +11,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CouriersGroupsOrdersMapper {
-
-
-
+    @Mapping(target = "orders", source = "orderGroups")
     CouriersGroupsOrders couriersGroupsOrdersToDto(Integer courierId, List<GroupOrders> orderGroups);
 
     @Mapping(target = "orders", source = "orderDtoList")

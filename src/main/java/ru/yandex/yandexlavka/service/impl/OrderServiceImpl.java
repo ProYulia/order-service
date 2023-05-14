@@ -44,9 +44,11 @@ public class OrderServiceImpl implements OrderService {
         return orderDtoList;
     }
 
-    public OrderDto getOrderById(int orderID) { //wrap with try-catch
+    public OrderDto getOrderById(Integer orderID) {
+
+        if (orderID < 0) throw new IllegalArgumentException();
         OrderEntity orderEntity = orderRepository.findById(orderID).orElseThrow();
-         return orderMapper.orderEntityToDto(orderEntity);
+        return orderMapper.orderEntityToDto(orderEntity);
     }
 
 
@@ -79,7 +81,6 @@ public class OrderServiceImpl implements OrderService {
             Integer orderId = order.getOrderId();
             Integer courierId = order.getCourierId();
             Instant completeTime = Instant.parse(order.getCompleteTime());
-            //completeTime.minus(25, ChronoUnit.MINUTES)
 
             int entitiesModified = orderRepository.updateByOrderId(orderId, courierId, completeTime);
             if (entitiesModified == 0) throw new RuntimeException(); //todo
