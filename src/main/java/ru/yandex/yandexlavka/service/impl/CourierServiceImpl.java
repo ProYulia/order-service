@@ -35,9 +35,6 @@ public class CourierServiceImpl implements CourierService {
 
     public GetCouriersResponse getAllCouriers(Integer offset, Integer limit) {
 
-//        int pageNumber = offset/limit;
-//        Pageable pageable = PageRequest.of(pageNumber, limit);
-
         if (offset == null) offset = 0;
         else if (offset < 0) throw new IllegalArgumentException();
 
@@ -89,8 +86,8 @@ public class CourierServiceImpl implements CourierService {
     public GetCourierMetaInfoResponse getMetaInfo(Integer courierId, String startDate, String endDate) {
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Instant start = null;
-        Instant end = null;
+        Instant start;
+        Instant end;
         try {
             start = dateFormat.parse(startDate).toInstant();
             end = dateFormat.parse(endDate).toInstant();
@@ -110,25 +107,6 @@ public class CourierServiceImpl implements CourierService {
             case "AUTO" -> multiplier = 1;
             default -> multiplier = 0;
         }
-
-        // count courier working hours between start & end
-//        List<String> workingHours = entity.getWorkingHours();
-//        DateFormat timeFormat = new SimpleDateFormat("hh:mm");
-//        Instant startTime = null;
-//        Instant endTime = null;
-//        long totalWorkingHours = 0;
-//
-//        for(String shift : workingHours) {
-//            try {
-//                startTime = dateFormat.parse(shift.substring(0, 5)).toInstant();
-//                endTime = dateFormat.parse(shift.substring(6, 11)).toInstant();
-//                totalWorkingHours += ChronoUnit.HOURS.between(startTime, endTime);
-//            } catch (ParseException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//
-//        long periodWorkingHours = ChronoUnit.DAYS.between(start, end) * totalWorkingHours;
 
         int earnings;
         Integer rating;
