@@ -10,9 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
 @SpringBootApplication
-//@ComponentScan({"ru.yandex.yandexlavka.mapper"})
-//@EntityScan("ru.yandex.yandexlavka")
-//@EnableJpaRepositories("ru.yandex.yandexlavka.repository")
 public class YandexLavkaApplication {
 
     public static void main(String[] args) {
