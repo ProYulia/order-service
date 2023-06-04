@@ -27,7 +27,7 @@ public class CourierControllerTest {
     private ObjectMapper mapper;
 
     @MockBean
-    private CourierServiceImpl courierServiceImpl; //todo
+    private CourierServiceImpl courierServiceImpl; //todo add new test
 
     @Test
     public void testShouldNotCreateWrongCourier() throws Exception {
